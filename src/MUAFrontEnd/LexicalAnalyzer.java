@@ -1,7 +1,7 @@
 package MUAFrontEnd;
 
 // Input: character stream
-// Output: a list of lexemes
+// Output: a list of tokens
 
 import java.util.Deque;
 import java.util.LinkedList;
@@ -116,13 +116,6 @@ public class LexicalAnalyzer {
         squareBracketCount = 0;
     }
 
-    // Get the result of lexical analysis
-    public boolean isCompleteLine() { return completeLine; }
-    public List<String> getStringList() {
-        if(!completeLine) return null;
-        if(stringList.isEmpty()) return null;
-        return new LinkedList<>(stringList);
-    }
 
     // Tokenize
     static public List<Token> tokenize(List<String> lexemeList) {
@@ -156,6 +149,19 @@ public class LexicalAnalyzer {
             }
         }
         return result;
+    }
+
+    // Get the results of lexical analysis
+    public boolean isCompleteLine() { return completeLine; }
+    public List<String> getStringList() {
+        if(!completeLine) return null;
+        if(stringList.isEmpty()) return null;
+        return new LinkedList<>(stringList);
+    }
+    public List<Token> getTokenList() {
+        if(!completeLine) return null;
+        if(stringList.isEmpty()) return null;
+        return LexicalAnalyzer.tokenize((List<String>) stringList);
     }
 
     // MUA character property utilities

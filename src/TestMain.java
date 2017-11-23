@@ -8,20 +8,19 @@ public class TestMain {
     public static void main(String[] args) {
         LexicalAnalyzer lexicalAnalyzer = new LexicalAnalyzer();
         Scanner scanner = new Scanner(System.in);
-        List<String> lexemeList = null;
+        List<Token> tokenList = null;
 
         while(scanner.hasNext()) {
             String string = scanner.nextLine();
             lexicalAnalyzer.sendLine(string);
             if(lexicalAnalyzer.isCompleteLine()) {
-                lexemeList = lexicalAnalyzer.getStringList();
+                tokenList = lexicalAnalyzer.getTokenList();
                 lexicalAnalyzer.cleanUp();
                 break;
             }
         }
 
-        List<Token> tokens = LexicalAnalyzer.tokenize(lexemeList);
-        if(lexemeList != null) for(Token t: tokens) {
+        if(tokenList != null) for(Token t: tokenList) {
             System.out.print(t);
         }
         System.out.println();
