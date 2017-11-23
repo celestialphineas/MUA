@@ -52,7 +52,7 @@ public class LexicalAnalyzer {
                 if(ch == ')') parenthesisCount--;
                 if(ch == '[') squareBracketCount++;
                 if(ch == ']') squareBracketCount--;
-                if(!readingComment && (ch != ')' || ch != ']'))
+                if(!readingComment)
                     stringList.addLast(Character.toString(ch));
             }
         } else { // Ordinary character
