@@ -3,6 +3,9 @@ package MUAFrontEnd;
 // Input: character stream
 // Output: a list of tokens
 
+import MUAMessageUtil.ErrorStringResource;
+import MUAMessageUtil.MUAErrorMessage;
+
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
@@ -159,9 +162,21 @@ public class LexicalAnalyzer {
         return new LinkedList<>(stringList);
     }
     public List<Token> getTokenList() {
-        if(!completeLine) return null;
-        if(stringList.isEmpty()) return null;
-        return LexicalAnalyzer.tokenize((List<String>) stringList);
+        if(parenthesisCount < 0) {
+            MUAErrorMessage.error(ErrorStringResource.lexical_analyzing,
+                    ErrorStringResource.too_many_parentheses,
+                    String.valueOf(-parenthesisCount));
+            cleanUp();
+            return null;
+        }
+        if(squareBracketCount < 0) {
+            MUAErrorMessage.error(ErrorStringResource.lexical_analyzing,
+                    ErrorStringResource.too_many_brackets,
+                    String.valueOf(-squareBracketCount));
+            cleanUp();
+            return null;
+        }
+        return LexicalAnalyzer.tokenize(getStringList());
     }
 
     // MUA character property utilities
