@@ -1,12 +1,15 @@
 import MUAFrontEnd.LexicalAnalyzer;
-import java.util.Deque;
+import MUAFrontEnd.Token;
+import MUAFrontEnd.Tokenizer;
+
+import java.util.List;
 import java.util.Scanner;
 
 public class TestMain {
     public static void main(String[] args) {
         LexicalAnalyzer lexicalAnalyzer = new LexicalAnalyzer();
         Scanner scanner = new Scanner(System.in);
-        Deque<String> stringList = null;
+        List<String> stringList = null;
 
         while(scanner.hasNext()) {
             String string = scanner.nextLine();
@@ -18,8 +21,9 @@ public class TestMain {
             }
         }
 
-        if(stringList != null) for(String s: stringList) {
-            System.out.print("{" + s + "} ");
+        List<Token> tokens = Tokenizer.tokenize(stringList);
+        if(stringList != null) for(Token t: tokens) {
+            System.out.print(t);
         }
         System.out.println();
     }

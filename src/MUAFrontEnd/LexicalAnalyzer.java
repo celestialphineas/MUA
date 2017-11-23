@@ -5,11 +5,13 @@ package MUAFrontEnd;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.LinkedList;
+import java.util.List;
 
 // The lexical analyzer is a state machine
 public class LexicalAnalyzer {
     final private StringBuilder stringBuffer = new StringBuilder();
-    final private Deque<String> stringList = new ArrayDeque<>();
+    final private Deque<String> stringList = new LinkedList<>();
     private boolean completeLine = true;
     private boolean readingComment = false;
     private int slashCount = 0;
@@ -33,7 +35,11 @@ public class LexicalAnalyzer {
                 stringBuffer.delete(0, stringBuffer.length());
             }
         } else if(isBreakableSymbol(ch)) {
+            boolean minusBreak = true;
             if(stringBuffer.length() > 0 && !readingComment) {
+                if(stringBuffer.charAt(stringBuffer.length() - 1) != '-') {
+                    minusBreak = false;
+                }
                 stringList.add(stringBuffer.toString());
                 // Clear the string buffer
                 stringBuffer.delete(0, stringBuffer.length());
@@ -52,8 +58,22 @@ public class LexicalAnalyzer {
                 if(ch == ')') parenthesisCount--;
                 if(ch == '[') squareBracketCount++;
                 if(ch == ']') squareBracketCount--;
-                if(!readingComment)
+                // IMPORTANT NOTE: The original design of MUA is ambiguous
+                // There are two possible interpretation of the expression
+                // [1 -1]
+                // It can be interpreted as:
+                // [mul 1 1]
+                // or:
+                // [1 (-1)]
+                // In my design approach, [1 -1] will be regarded as the latter
+                // [1-1]    -> [mul 1 1]
+                // [1- 1]   -> [mul 1 1]
+                // [1 -1]   -> [1 -1]
+                if(ch == '-' && minusBreak) {
+                    stringBuffer.append('-');
+                } else if(!readingComment) {
                     stringList.addLast(Character.toString(ch));
+                }
             }
         } else { // Ordinary character
             if(!readingComment) {
@@ -99,10 +119,10 @@ public class LexicalAnalyzer {
 
     // Get the result of lexical analysis
     public boolean isCompleteLine() { return completeLine; }
-    public Deque<String> getStringList() {
+    public List<String> getStringList() {
         if(!completeLine) return null;
         if(stringList.isEmpty()) return null;
-        return new ArrayDeque<>(stringList);
+        return new LinkedList<>(stringList);
     }
 
     // MUA character property utilities
