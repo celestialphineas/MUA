@@ -11,4 +11,6 @@ public class NumObject implements MUAObject {
     public boolean isAtomic() { return true; }
     @Override
     public String toString() { return Double.toString(val); }
+    @Override
+    public String typeName() { return "number"; }
 }

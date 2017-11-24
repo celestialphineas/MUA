@@ -1,6 +1,5 @@
 package MUABackEnd.MUAObjects;
 
-import java.util.LinkedList;
 import java.util.Stack;
 
 public class StackTrace {
@@ -22,9 +21,4 @@ public class StackTrace {
     public void pop() { callStack.pop(); }
     static public void setMaxSize(int size) { maxSize = size; }
     static public int getMaxSize() { return maxSize; }
-}
-
-class MUAStackOverflow extends Exception {
-    public MUAStackOverflow() { super(); }
-    public MUAStackOverflow(String message) { super(message);}
 }

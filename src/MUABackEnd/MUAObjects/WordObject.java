@@ -10,5 +10,7 @@ public class WordObject implements MUAObject {
     @Override
     public boolean isAtomic() { return true; }
     @Override
-    public String toString() { return val; }
+    public String typeName()  { return "word"; }
+    @Override
+    public String toString()  { return val; }
 }
