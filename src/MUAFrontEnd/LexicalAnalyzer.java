@@ -39,7 +39,8 @@ public class LexicalAnalyzer {
         } else if(isBreakableSymbol(ch)) {
             boolean minusBreak = true;
             if(stringBuffer.length() > 0 && !readingComment) {
-                if(stringBuffer.charAt(stringBuffer.length() - 1) != '-') {
+                char lastCh = stringBuffer.charAt(stringBuffer.length() - 1);
+                if(lastCh != '-' && lastCh != '+') {
                     minusBreak = false;
                 }
                 stringList.add(stringBuffer.toString());
@@ -71,8 +72,8 @@ public class LexicalAnalyzer {
                 // [1-1]    -> [mul 1 1]
                 // [1- 1]   -> [mul 1 1]
                 // [1 -1]   -> [1 -1]
-                if(ch == '-' && minusBreak) {
-                    stringBuffer.append('-');
+                if((ch == '-' || ch == '+') && minusBreak) {
+                    stringBuffer.append(ch);
                 } else if(!readingComment) {
                     stringList.addLast(Character.toString(ch));
                 }
@@ -138,7 +139,9 @@ public class LexicalAnalyzer {
                 char ch = lexeme.charAt(0);
                 if(ch == '\"') {
                     result.add(new Token(Token.Type.WORD, lexeme.substring(1)));
-                } else if(ch == '.' || (ch == '-' && lexeme.length() > 1) || Character.isDigit(ch)) {
+                } else if(ch == '.'
+                        || ((ch == '-' || ch == '+') && lexeme.length() > 1)
+                        || Character.isDigit(ch)) {
                     result.add(new Token(Token.Type.NUMBER, lexeme));
                 } else if(isExpressionSymbol(ch)) {
                     result.add(new Token(Token.Type.EXPROP, lexeme));

@@ -1,3 +1,4 @@
+import MUAAbandoned.ExprConversion;
 import MUAFrontEnd.LexicalAnalyzer;
 import MUAFrontEnd.Token;
 
@@ -19,7 +20,12 @@ public class TestMain {
                 break;
             }
         }
+        tokenList = ExprConversion.fullParenthesize(tokenList);
 
+        if(tokenList != null) for(Token t: tokenList) {
+            System.out.print(t.val + " ");
+        }
+        System.out.println();
         if(tokenList != null) for(Token t: tokenList) {
             System.out.print(t);
         }
