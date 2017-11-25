@@ -4,10 +4,10 @@ public abstract class OperationObject implements MUAObject {
     protected String name;
     protected int argc;
     public OperationObject()    { argc = 0; }
-    int getArgc()               { return argc; }
-    boolean isBuiltIn()         { return true; }
-    String getName()            { return name; }
-    MUAObject getResult(ExprListObject expr) throws MUAStackOverflow {
+    public int getArgc()        { return argc; }
+    public boolean isBuiltIn()  { return true; }
+    public String getName()     { return name; }
+    MUAObject getResult(ExprListObject expr) throws MUAStackOverflowException {
         StackTrace.getInstance().push(name);
         StackTrace.getInstance().pop();
         return null;

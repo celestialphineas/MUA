@@ -7,17 +7,18 @@ public class CustomOperation extends OperationObject {
     private static int operationNumber;
     // You MUST check if the list is operationizable first before you construct the
     // custom operation.
-    CustomOperation(ExprListObject list) throws UnOperationizableList {
-        if(!isOperationizable()) throw new UnOperationizableList();
+    public CustomOperation(ExprListObject list) throws UnOperationizableListException {
+        if(!isOperationizable(list)) throw new UnOperationizableListException();
         operationNumber = operationSerial++;
         // TODO
     }
-    @Override boolean isBuiltIn()   { return true; }
-    @Override String getName()      { return "function" + operationNumber; }
-    void setName(String name_)      { name = name_; }
+    @Override public boolean isBuiltIn()    { return true; }
+    @Override public String getName()       { return "function" + operationNumber; }
+    @Override public String toString()      { return "function"; }
+    public void setName(String name_)       { name = name_; }
 
     @Override
-    MUAObject getResult(ExprListObject expr) throws MUAStackOverflow {
+    MUAObject getResult(ExprListObject expr) throws MUAStackOverflowException {
         StackTrace.getInstance().push(name);
         // TODO
         StackTrace.getInstance().pop();
@@ -25,13 +26,8 @@ public class CustomOperation extends OperationObject {
     }
 
     // Test if a list is operationizable
-    static boolean isOperationizable(ExprListObject list) {
+    public static boolean isOperationizable(ExprListObject list) {
         // TODO
         return true;
     }
-}
-
-class UnOperationizableList extends Exception {
-    UnOperationizableList()                 { super(); }
-    UnOperationizableList(String message)   { super(message); }
 }

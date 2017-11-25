@@ -16,17 +16,10 @@ public class Namespace implements MUAObject {
     }
     protected Namespace() {}
 
-    public void setName(String name_) {
-        name = name_;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setParent(Namespace parent_) {
-        parent = parent_;
-    }
+    public void setName(String name_)           { name = name_; }
+    public String getName()                     { return name; }
+    public void setParent(Namespace parent_)    { parent = parent_; }
+    public Namespace getParent()                { return parent; }
 
     public MUAObject find(String key) {
         MUAObject found = hashMap.get(key);
@@ -58,5 +51,7 @@ public class Namespace implements MUAObject {
     }
 
     @Override
-    public boolean isAtomic() { return false; }
+    public boolean isAtomic()   { return false; }
+    @Override
+    public String typeName()    { return "namespace"; }
 }

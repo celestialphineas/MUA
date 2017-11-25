@@ -8,7 +8,8 @@ import java.util.List;
 // An ExprList is a sequence of MUA objects, with its first element an operator head
 // and arguments followed
 public class ExprListObject implements MUAObject {
-    private Namespace namespace = GlobalNamespace.getInstance();
+    static private int namespaceSerial = 1;
+    public Namespace namespace = GlobalNamespace.getInstance();
     private MUAObject returnVal = null;
     private boolean evalDone = false;
     final public List<MUAObject> objectList = new LinkedList<>();
@@ -19,15 +20,25 @@ public class ExprListObject implements MUAObject {
             return ((OperationObject)(objectList.get(0))).getName();
         else return "";
     }
+
     // Operations on the evalDone flag
     public void setEvalDone()   { evalDone = true; }
     public void unsetEvalDone() { evalDone = false; }
     public boolean isEvalDone() { return evalDone; }
+    // Allocate namespace for the exprList
+    public Namespace allocateNamespace(Namespace parent) {
+        if(namespace != parent) {
+            namespace = new Namespace("LocalNamespace" + namespaceSerial, parent);
+            namespaceSerial++;
+        }
+        return namespace;
+    }
     // The evalExpr() method
     public void evalExpr() {
         // TODO
     }
 
+    // Implements MUAObject
     @Override
     public boolean isAtomic() { return false; }
     @Override

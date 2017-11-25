@@ -8,8 +8,7 @@ public class BooleanObject implements MUAObject{
     public BooleanObject(boolean val_)  { val = val_; }
     public BooleanObject(String val_)   { val = val_.toLowerCase().equals("true"); }
     public boolean getVal() { return val; }
-    @Override
-    public boolean isAtomic() { return true; }
-    @Override
-    public String toString() { return val ? "true" : "false"; }
+    @Override public boolean isAtomic() { return true; }
+    @Override public String typeName()  { return "boolean"; }
+    @Override public String toString()  { return val ? "true" : "false"; }
 }

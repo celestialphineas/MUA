@@ -1,4 +1,6 @@
 import MUAAbandoned.ExprConversion;
+import MUABackEnd.MUACore;
+import MUABackEnd.MUAObjects.MUAObject;
 import MUAFrontEnd.LexicalAnalyzer;
 import MUAFrontEnd.Token;
 
@@ -10,6 +12,7 @@ public class TestMain {
         LexicalAnalyzer lexicalAnalyzer = new LexicalAnalyzer();
         Scanner scanner = new Scanner(System.in);
         List<Token> tokenList = null;
+        MUACore core = MUACore.getInstance();
 
         while(scanner.hasNext()) {
             String string = scanner.nextLine();
@@ -20,7 +23,6 @@ public class TestMain {
                 break;
             }
         }
-        tokenList = ExprConversion.fullParenthesize(tokenList);
 
         if(tokenList != null) for(Token t: tokenList) {
             System.out.print(t.val + " ");
@@ -30,5 +32,10 @@ public class TestMain {
             System.out.print(t);
         }
         System.out.println();
+
+        List<MUAObject> muaObjects = MUACore.makeExprList(tokenList);
+        if(muaObjects != null) System.out.println(muaObjects.toString());
+
+
     }
 }

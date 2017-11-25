@@ -11,10 +11,10 @@ public class StackTrace {
     Stack<String> callStack = new Stack<>();
 
     private StackTrace() { }
-    public void push(String str) throws MUAStackOverflow
+    public void push(String str) throws MUAStackOverflowException
     {
         if(callStack.size() > maxSize) {
-            throw new MUAStackOverflow();
+            throw new MUAStackOverflowException();
         }
         callStack.push(str);
     }

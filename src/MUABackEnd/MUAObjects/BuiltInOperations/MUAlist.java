@@ -3,10 +3,10 @@ import MUABackEnd.MUAObjects.*;
 import MUAMessageUtil.ErrorStringResource;
 import MUAMessageUtil.MUAErrorMessage;
 
-public class MUAadd extends BuiltInOperation {
-    public MUAadd() {
-        name = "add";
-        argc = 2;
+public class MUAlist extends BuiltInOperation {
+    public MUAlist() {
+        name = "list";
+        argc = -1;      // Any
     }
     @Override
     public MUAObject getResult(ExprListObject expr) throws MUAStackOverflowException {
