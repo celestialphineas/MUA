@@ -45,7 +45,7 @@ public class Namespace implements MUAObject {
     }
 
     public void set(String key, MUAObject val) {
-        if(val != null) {
+        if(key != null && val != null) {
             hashMap.put(key, val);
         }
     }

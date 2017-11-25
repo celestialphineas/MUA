@@ -3,6 +3,7 @@ package MUABackEnd;
 import MUABackEnd.MUANamespace.GlobalNamespace;
 import MUABackEnd.MUANamespace.Namespace;
 import MUABackEnd.MUAObjects.*;
+import MUABackEnd.MUAObjects.BuiltInOperations.*;
 import MUAFrontEnd.Token;
 import MUAMessageUtil.ErrorStringResource;
 import MUAMessageUtil.MUAErrorMessage;
@@ -17,12 +18,14 @@ public class MUACore {
         return ourInstance;
     }
 
-    private MUACore() {
+    private MUACore() { MUAInit(); }
+    public void MUAInit() {
         // Add built-in functions
         Namespace global = GlobalNamespace.getInstance();
         registerBuiltInOperation(MUAadd.class, global);
         registerBuiltInOperation(MUAlist.class, global);
     }
+
     private void registerBuiltInOperation(Class Op, Namespace namespace) {
         try {
             Object object = Op.newInstance();

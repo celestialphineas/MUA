@@ -12,9 +12,21 @@ public class ExprListObject implements MUAObject {
     public Namespace namespace = GlobalNamespace.getInstance();
     private MUAObject returnVal = null;
     private boolean evalDone = false;
-    final public List<MUAObject> objectList = new LinkedList<>();
-    public ExprListObject() { }
-    public MUAObject getReturnVal() { return returnVal; }
+    public List<MUAObject> objectList;
+    public ExprListObject() { objectList = new LinkedList<>(); }
+    public ExprListObject(ExprListObject that) {
+        if(that.namespace == GlobalNamespace.getInstance()) {
+            this.namespace = GlobalNamespace.getInstance();
+        } else {
+            this.namespace = new Namespace(that.namespace.getName() + "Dup",
+                that.namespace.getParent());
+        }
+        this.objectList = new LinkedList<>(that.objectList);
+    }
+    public MUAObject getReturnVal() {
+        // TODO: restore eval state?
+        return returnVal;
+    }
     public String getHeadName() {
         if(!objectList.isEmpty() && objectList.get(0) instanceof OperationObject)
             return ((OperationObject)(objectList.get(0))).getName();
@@ -28,7 +40,7 @@ public class ExprListObject implements MUAObject {
     // Allocate namespace for the exprList
     public Namespace allocateNamespace(Namespace parent) {
         if(namespace != parent) {
-            namespace = new Namespace("LocalNamespace" + namespaceSerial, parent);
+            namespace = new Namespace("localNamespace" + namespaceSerial, parent);
             namespaceSerial++;
         }
         return namespace;
@@ -46,7 +58,7 @@ public class ExprListObject implements MUAObject {
     @Override
     public String toString() {
         StringBuilder buffer = new StringBuilder();
-        buffer.append('(');
+        buffer.append("( ");
         for(MUAObject object : objectList) {
             buffer.append(object.toString());
             buffer.append(' ');

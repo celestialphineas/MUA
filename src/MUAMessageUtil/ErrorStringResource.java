@@ -7,6 +7,7 @@ public enum ErrorStringResource {
     making_objects("Making objects"),
     mua_core("MUA core"),
     operation_add("Operation add"),
+    mua_custom_operation("Custom operation"),
     too_many_parentheses("You've got %% more right parentheses. "),
     too_many_brackets("You've got %% more right brackets. "),
     undefined_reference("Undefined reference to \"%%\". "),
@@ -16,6 +17,7 @@ public enum ErrorStringResource {
     number_format("Unrecognized number format \"%%\". "),
     too_few_operands("Too few operands for operation \"%%\". "),
     mua_core_init_error("MUA core initialization error: \"%%\". "),
+    mua_operationization_internal("Operationization internal error: \"%%\". "),
     incompatible_type("Incompatible type %%. ");
     private String resourceVal;
     ErrorStringResource(String str) {

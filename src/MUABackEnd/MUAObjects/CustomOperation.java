@@ -1,33 +1,79 @@
 package MUABackEnd.MUAObjects;
 
+import MUABackEnd.MUAObjects.BuiltInOperations.MUAlist;
+import MUAMessageUtil.ErrorStringResource;
+import MUAMessageUtil.MUAErrorMessage;
+import java.util.List;
+
 public class CustomOperation extends OperationObject {
     // The operation serial changes every time a new custom operation is constructed.
     private static int operationSerial = 1;
     // The operation object's number
     private static int operationNumber;
+    // Argument declaration list
+    private ExprListObject argDeclaration;
+    // Operation sequence list
+    private ExprListObject localEnvList;
+
     // You MUST check if the list is operationizable first before you construct the
     // custom operation.
     public CustomOperation(ExprListObject list) throws UnOperationizableListException {
         if(!isOperationizable(list)) throw new UnOperationizableListException();
+        argc = ((ExprListObject)(list.objectList.get(1))).objectList.size() - 1;
+        try {
+            argDeclaration = new ExprListObject((ExprListObject)(list.objectList.get(1)));
+            localEnvList = new ExprListObject((ExprListObject)(list.objectList.get(2)));
+        } catch (Exception e) {
+            MUAErrorMessage.error(ErrorStringResource.mua_custom_operation,
+                    ErrorStringResource.mua_operationization_internal, "Mysterious force");
+            throw new UnOperationizableListException();
+        }
+        name = "function" + operationNumber;
         operationNumber = operationSerial++;
-        // TODO
     }
-    @Override public boolean isBuiltIn()    { return true; }
-    @Override public String getName()       { return "function" + operationNumber; }
-    @Override public String toString()      { return "function"; }
-    public void setName(String name_)       { name = name_; }
 
     @Override
     MUAObject getResult(ExprListObject expr) throws MUAStackOverflowException {
         StackTrace.getInstance().push(name);
-        // TODO
+        // Passing parameters
+        // Set the variable in the namespace according to the first sublist
+        for(int i = 1; i <= argc; i++) {
+            WordObject word = (WordObject)argDeclaration.objectList.get(i);
+            MUAObject obj = expr.objectList.get(i);
+            if(word == null) continue;
+            localEnvList.namespace.set(word.getVal(), obj);
+        }
+        // Get result
+        localEnvList.evalExpr();
+        MUAObject result = localEnvList.getReturnVal();
         StackTrace.getInstance().pop();
-        return null;
+        return result;
     }
 
     // Test if a list is operationizable
     public static boolean isOperationizable(ExprListObject list) {
-        // TODO
+        // A function is operationizable:
+        //      1. The list has at least two sublists
+        //      2. The first list must be a collection of words (argument/operand list)
+        if(list == null) return false;
+        if(list.objectList.size() < 3) return false;
+        if(!(list.objectList.get(0) instanceof MUAlist)) return false;
+        if(!(list.objectList.get(1) instanceof ExprListObject)) return false;
+        if(!(((ExprListObject)(list.objectList.get(1))).objectList.get(0) instanceof MUAlist))
+            return false;
+        if(!(list.objectList.get(2) instanceof ExprListObject)) return false;
+        if(!(((ExprListObject)(list.objectList.get(2))).objectList.get(0) instanceof MUAlist))
+            return false;
+        // Check the first
+        List<MUAObject> listToCheck = ((ExprListObject)(list.objectList.get(1))).objectList;
+        for(MUAObject i : listToCheck.subList(1, listToCheck.size())) {
+            if(!(i instanceof WordObject)) return false;
+        }
         return true;
     }
+
+    @Override public boolean isBuiltIn()    { return true; }
+    @Override public String getName()       { return name; }
+    @Override public String toString()      { return name; }
+    public void setName(String name_)       { name = name_; }
 }

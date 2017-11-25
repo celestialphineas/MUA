@@ -1,6 +1,9 @@
 import MUAAbandoned.ExprConversion;
 import MUABackEnd.MUACore;
+import MUABackEnd.MUAObjects.CustomOperation;
+import MUABackEnd.MUAObjects.ExprListObject;
 import MUABackEnd.MUAObjects.MUAObject;
+import MUABackEnd.MUAObjects.NumObject;
 import MUAFrontEnd.LexicalAnalyzer;
 import MUAFrontEnd.Token;
 
@@ -33,9 +36,18 @@ public class TestMain {
         }
         System.out.println();
 
+        // Lisp form
         List<MUAObject> muaObjects = MUACore.makeExprList(tokenList);
         if(muaObjects != null) System.out.println(muaObjects.toString());
+        System.out.println();
 
-
+        ExprListObject expr;
+        if(muaObjects != null) {
+            expr = (ExprListObject) (muaObjects.get(0));
+            if(expr != null) {
+                System.out.println("Operationizable: "
+                        + CustomOperation.isOperationizable(expr));
+            }
+        }
     }
 }
