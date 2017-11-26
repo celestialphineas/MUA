@@ -23,7 +23,14 @@ public class MUACore {
         // Add built-in functions
         Namespace global = GlobalNamespace.getInstance();
         registerBuiltInOperation(MUAadd.class, global);
+        registerBuiltInOperation(MUAeval.class, global);
+        registerBuiltInOperation(MUAholdprint.class, global);
         registerBuiltInOperation(MUAlist.class, global);
+        registerBuiltInOperation(MUAmake.class, global);
+        registerBuiltInOperation(MUAoutput.class, global);
+        registerBuiltInOperation(MUAprint.class, global);
+        registerBuiltInOperation(MUAstop.class, global);
+        registerBuiltInOperation(MUAthing.class, global);
     }
 
     private void registerBuiltInOperation(Class Op, Namespace namespace) {
@@ -37,6 +44,30 @@ public class MUACore {
             MUAErrorMessage.error(ErrorStringResource.mua_core,
                 ErrorStringResource.mua_core_init_error, Op.toString());
         }
+    }
+
+    public static List<MUAObject> evaluate(List<MUAObject> exprList) {
+        List<MUAObject> result = new LinkedList<>();
+        for(MUAObject obj : exprList) {
+            if(obj instanceof ExprListObject) {
+                try {
+                    ((ExprListObject) obj).evalExpr();
+                    MUAObject returnVal = ((ExprListObject) obj).getReturnVal();
+                    if(returnVal != null) {
+                        result.add(returnVal);
+                    }
+                } catch (MUAStackOverflowException e) {
+                    MUAErrorMessage.error(ErrorStringResource.mua_core,
+                        ErrorStringResource.stack_overflow, obj.toString());
+                } catch (MUARuntimeException e) {
+                    MUAErrorMessage.error(ErrorStringResource.mua_core,
+                        ErrorStringResource.runtime_error, obj.toString());
+                }
+            } else if(obj != null) {
+                result.add(obj);
+            }
+        }
+        return result;
     }
 
     public static List<MUAObject> makeExprList(List<Token> tokenList) {
@@ -55,7 +86,7 @@ public class MUACore {
         return result;
     }
 
-    static MUAObject makeObject(Deque<Token> tokens, Namespace namespace)
+    private static MUAObject makeObject(Deque<Token> tokens, Namespace namespace)
     throws MakeObjectFailureException {
         if(tokens == null || tokens.isEmpty()) return null;
         Token token = tokens.getFirst();
@@ -72,9 +103,8 @@ public class MUACore {
             }
         } else if(token.type == Token.Type.OPERATION) {
             ExprListObject exprList = new ExprListObject();
-            
+            exprList.namespace = namespace;
             MUAObject found = exprList.namespace.find(token.val);
-            MUAObject head;
 
             // If not found
             if(found == null) {
@@ -82,12 +112,16 @@ public class MUACore {
                         ErrorStringResource.unexpected_token, token.val);
                 throw new MakeObjectFailureException();
             }
+
             // Found operation
+            // This will add a dumb head to the exprList
+            // The binding will be delayed to evaluation
+            MUAObject head = new DumbHeadObject(token.val);
+            // Ensure that "found" is always an operation object
             if(found instanceof BuiltInOperation) {
-                head = found;
             } else if(found instanceof ExprListObject) {
                 try {
-                    head = new CustomOperation((ExprListObject)found);
+                    found = new CustomOperation((ExprListObject)found);
                 } catch (UnOperationizableListException e) {
                     MUAErrorMessage.error(ErrorStringResource.making_objects,
                             ErrorStringResource.not_operationizable, token.val);
@@ -99,8 +133,24 @@ public class MUACore {
                 throw new MakeObjectFailureException();
             }
 
+//            if(found instanceof BuiltInOperation) {
+//                head = found;
+//            } else if(found instanceof ExprListObject) {
+//                try {
+//                    head = new CustomOperation((ExprListObject)found);
+//                } catch (UnOperationizableListException e) {
+//                    MUAErrorMessage.error(ErrorStringResource.making_objects,
+//                            ErrorStringResource.not_operationizable, token.val);
+//                    throw new MakeObjectFailureException();
+//                }
+//            } else {
+//                MUAErrorMessage.error(ErrorStringResource.making_objects,
+//                        ErrorStringResource.not_operationizable, token.val);
+//                throw new MakeObjectFailureException();
+//            }
+
             exprList.objectList.add(head);
-            for(int i = 0; i < ((OperationObject)head).getArgc(); i++) {
+            for(int i = 0; i < ((OperationObject)found).getArgc(); i++) {
                 MUAObject toAppend = makeObject(tokens, namespace);
                 if(toAppend == null) {
                     MUAErrorMessage.error(ErrorStringResource.making_objects,
@@ -123,6 +173,8 @@ public class MUACore {
             list.objectList.add(new MUAlist());
             // Allocate namespace for list
             namespace = list.allocateNamespace(namespace);
+            // Test use:
+            // System.out.println("List namespace: " + list.namespace.getName());
             MUAObject toAppend = makeObject(tokens, namespace);
             while(toAppend != null) {
                 list.objectList.add(toAppend);

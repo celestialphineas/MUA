@@ -22,10 +22,10 @@ public class CustomOperation extends OperationObject {
         argc = ((ExprListObject)(list.objectList.get(1))).objectList.size() - 1;
         try {
             argDeclaration = new ExprListObject((ExprListObject)(list.objectList.get(1)));
-            localEnvList = new ExprListObject((ExprListObject)(list.objectList.get(2)));
+            localEnvList = (ExprListObject)(list.objectList.get(2));
         } catch (Exception e) {
             MUAErrorMessage.error(ErrorStringResource.mua_custom_operation,
-                    ErrorStringResource.mua_operationization_internal, "Mysterious force");
+                    ErrorStringResource.operationization_internal, "Mysterious force");
             throw new UnOperationizableListException();
         }
         name = "function" + operationNumber;
@@ -33,7 +33,8 @@ public class CustomOperation extends OperationObject {
     }
 
     @Override
-    MUAObject getResult(ExprListObject expr) throws MUAStackOverflowException {
+    public MUAObject getResult(ExprListObject expr)
+    throws MUAStackOverflowException, MUARuntimeException {
         StackTrace.getInstance().push(name);
         // Passing parameters
         // Set the variable in the namespace according to the first sublist
@@ -42,6 +43,9 @@ public class CustomOperation extends OperationObject {
             MUAObject obj = expr.objectList.get(i);
             if(word == null) continue;
             localEnvList.namespace.set(word.getVal(), obj);
+            // Test use: 
+            // System.out.println("Env list namespace: " + localEnvList.namespace.getName());
+            // System.out.println("Env list namespace: " + word.getVal() + ", " + localEnvList.namespace.find(word.getVal()));
         }
         // Get result
         localEnvList.evalExpr();

@@ -14,6 +14,11 @@ public class Namespace implements MUAObject {
         name = name_; parent = parent_;
         hashMap = new HashMap<>();
     }
+    public Namespace clone(String name_) {
+        Namespace result = new Namespace(name_, parent);
+        result.hashMap = new HashMap<>(this.hashMap);
+        return result;
+    }
     protected Namespace() {}
 
     public void setName(String name_)           { name = name_; }

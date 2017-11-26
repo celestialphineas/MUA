@@ -7,7 +7,8 @@ public abstract class BuiltInOperation extends OperationObject {
     @Override public String getName()      { return name; }
     @Override public String toString()     { return name; }
     @Override
-    public MUAObject getResult(ExprListObject expr) throws MUAStackOverflowException {
+    public MUAObject getResult(ExprListObject expr)
+    throws MUAStackOverflowException, MUARuntimeException {
         StackTrace.getInstance().push(name);
         StackTrace.getInstance().pop();
         return null;

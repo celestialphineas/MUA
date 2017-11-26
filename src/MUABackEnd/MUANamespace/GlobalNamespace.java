@@ -14,7 +14,6 @@ public class GlobalNamespace extends Namespace {
 
     private GlobalNamespace() {
         name = "Global";
-        parent = ourInstance;
         hashMap = new HashMap<>();
     }
 
@@ -27,6 +26,8 @@ public class GlobalNamespace extends Namespace {
 
     @Override
     public void setParent(Namespace parent_) { } // Do nothing
+    @Override
+    public Namespace getParent() { return ourInstance; }
     @Override
     public MUAObject find(String key) {
         MUAObject found = hashMap.get(key);

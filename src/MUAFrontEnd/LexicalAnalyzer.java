@@ -127,7 +127,7 @@ public class LexicalAnalyzer {
         List<Token> result = new LinkedList<>();
         boolean meetColon = false;
         for(String lexeme : lexemeList) {
-            if(lexeme == ":") {
+            if(lexeme.equals(":")) {
                 meetColon = true;
                 continue;
             }

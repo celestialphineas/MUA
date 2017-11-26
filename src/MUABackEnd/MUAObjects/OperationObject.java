@@ -7,7 +7,8 @@ public abstract class OperationObject implements MUAObject {
     public int getArgc()        { return argc; }
     public boolean isBuiltIn()  { return true; }
     public String getName()     { return name; }
-    MUAObject getResult(ExprListObject expr) throws MUAStackOverflowException {
+    public MUAObject getResult(ExprListObject expr)
+    throws MUAStackOverflowException, MUARuntimeException {
         StackTrace.getInstance().push(name);
         StackTrace.getInstance().pop();
         return null;

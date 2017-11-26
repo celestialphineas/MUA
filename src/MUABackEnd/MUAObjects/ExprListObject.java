@@ -2,29 +2,35 @@ package MUABackEnd.MUAObjects;
 
 import MUABackEnd.MUANamespace.GlobalNamespace;
 import MUABackEnd.MUANamespace.Namespace;
+import MUAMessageUtil.ErrorStringResource;
+import MUAMessageUtil.MUAErrorMessage;
+
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 
 // An ExprList is a sequence of MUA objects, with its first element an operator head
 // and arguments followed
 public class ExprListObject implements MUAObject {
-    static private int namespaceSerial = 1;
+    private static int namespaceSerial = 1;
     public Namespace namespace = GlobalNamespace.getInstance();
     private MUAObject returnVal = null;
+    // Set only when the sublist wishes to block the parent from further
+    // evaluation.
     private boolean evalDone = false;
     public List<MUAObject> objectList;
-    public ExprListObject() { objectList = new LinkedList<>(); }
+    public ExprListObject() {
+        objectList = new LinkedList<>();
+    }
     public ExprListObject(ExprListObject that) {
         if(that.namespace == GlobalNamespace.getInstance()) {
             this.namespace = GlobalNamespace.getInstance();
         } else {
-            this.namespace = new Namespace(that.namespace.getName() + "Dup",
-                that.namespace.getParent());
+            this.namespace = that.namespace.clone(that.namespace.getName() + "Dup");
         }
         this.objectList = new LinkedList<>(that.objectList);
     }
     public MUAObject getReturnVal() {
-        // TODO: restore eval state?
         return returnVal;
     }
     public String getHeadName() {
@@ -39,15 +45,45 @@ public class ExprListObject implements MUAObject {
     public boolean isEvalDone() { return evalDone; }
     // Allocate namespace for the exprList
     public Namespace allocateNamespace(Namespace parent) {
-        if(namespace != parent) {
-            namespace = new Namespace("localNamespace" + namespaceSerial, parent);
-            namespaceSerial++;
-        }
+        namespace = new Namespace("localNamespace" + namespaceSerial, parent);
+        namespaceSerial++;
         return namespace;
     }
     // The evalExpr() method
-    public void evalExpr() {
+    public void evalExpr() throws MUAStackOverflowException, MUARuntimeException {
         // TODO
+        ListIterator<MUAObject> firstIterator = objectList.listIterator();
+        firstIterator.next();
+        MUAObject firstElement = objectList.get(0);
+        if(firstElement instanceof DumbHeadObject) {
+            String firstName = ((DumbHeadObject) firstElement).getVal();
+            // Bind the first element
+            firstElement = namespace.getParent().find(firstName);
+            // Test use:
+            // System.out.println("First element: " + firstElement);
+            if(firstElement instanceof BuiltInOperation) {
+                firstIterator.set(firstElement);
+            } else if(firstElement instanceof ExprListObject) {
+                try {
+                    firstElement = new CustomOperation((ExprListObject)firstElement);
+                } catch (UnOperationizableListException e) {
+                    MUAErrorMessage.error(ErrorStringResource.mua_custom_operation,
+                        ErrorStringResource.not_operationizable, firstName);
+                    throw new MUARuntimeException();
+                }
+                firstIterator.set(firstElement);
+            } else {
+                MUAErrorMessage.error(ErrorStringResource.mua_custom_operation,
+                    ErrorStringResource.not_operationizable, firstName);
+                throw new MUARuntimeException();
+            }
+        }
+
+        OperationObject operation = (OperationObject) objectList.get(0);
+        if(operation == null) {
+            return;
+        }
+        returnVal = operation.getResult(this);
     }
 
     // Implements MUAObject
