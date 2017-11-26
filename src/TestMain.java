@@ -46,15 +46,6 @@ public class TestMain {
             List<MUAObject> result = MUACore.evaluate(muaObjects);
             if(result != null) System.out.println(result.toString());
             else continue;
-
-            ExprListObject expr;
-            if(muaObjects != null) {
-                expr = (ExprListObject) (muaObjects.get(0));
-                if(expr != null) {
-                    System.out.println("Operationizable: "
-                            + CustomOperation.isOperationizable(expr));
-                }
-            }
         }
     }
 }

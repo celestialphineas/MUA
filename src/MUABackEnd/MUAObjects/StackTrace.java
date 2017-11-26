@@ -18,7 +18,8 @@ public class StackTrace {
         }
         callStack.push(str);
     }
-    public void pop() { callStack.pop(); }
+    public void pop()   { callStack.pop(); }
+    public void clear() { callStack.clear(); }
     static public void setMaxSize(int size) { maxSize = size; }
     static public int getMaxSize() { return maxSize; }
 }

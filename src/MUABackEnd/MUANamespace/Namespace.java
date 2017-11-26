@@ -55,6 +55,12 @@ public class Namespace implements MUAObject {
         }
     }
 
+    public void unset(String key) {
+        if(key != null) {
+            hashMap.remove(key);
+        }
+    }
+
     @Override
     public boolean isAtomic()   { return false; }
     @Override

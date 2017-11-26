@@ -14,10 +14,17 @@ public class MUAeval extends BuiltInOperation {
         MUAObject result = expr.objectList.get(1);
         StackTrace.getInstance().pop();
         // Eval
-        // Todo: Eval recursively
         if(result instanceof ExprListObject) {
-            ((ExprListObject)result).evalExpr();
-            return ((ExprListObject)result).getReturnVal();
-        } else return result;
+            // Eval one more time for operation "thing"
+            if(((ExprListObject) result).objectList.get(0).toString().equals("thing")) {
+                ((ExprListObject) result).evalExpr();
+                result = ((ExprListObject) result).getReturnVal();
+            }
+            if(result instanceof ExprListObject) {
+                ((ExprListObject)result).evalExpr();
+                result = ((ExprListObject)result).getReturnVal();
+            }
+        }
+        return result;
     }
 }

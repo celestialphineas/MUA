@@ -83,3 +83,11 @@ MUA目前的设计无法避免中缀的歧义。如果中缀转换放在前端�
 MUA应当是词法作用域的。
 
 如果将`ift`、`iff`视作`test`表达式的一部分，那么由于MUA参数必须是确定好的，`ift`和`iff`必须同时存在，或`test`函数需要比较巧妙的设计。如果视作分离的语句，则违背了这一MUA实现的基本原则。
+
+export
+exportglobal
+
+main中清除trace stack
+添加lisp和mua形式切换开关
+
+与其set delay不如set和hold，list单独对待。

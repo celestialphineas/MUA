@@ -23,9 +23,10 @@ public class MUAthing extends BuiltInOperation {
             obj1 = ((ExprListObject) obj1).getReturnVal();
         }
         if(!(obj1 instanceof WordObject)) {
+            String typename = "null";
+            if(obj1 != null) typename = obj1.typeName();
             MUAErrorMessage.error(ErrorStringResource.operation_thing,
-                ErrorStringResource.incompatible_type,
-                obj1.typeName());
+                ErrorStringResource.incompatible_type, typename);
             throw new MUARuntimeException();
         }
         MUAObject obj = expr_.namespace.find(((WordObject)obj1).getVal());

@@ -23,14 +23,25 @@ public class MUACore {
         // Add built-in functions
         Namespace global = GlobalNamespace.getInstance();
         registerBuiltInOperation(MUAadd.class, global);
+        registerBuiltInOperation(MUAdeclare.class, global);
+        registerBuiltInOperation(MUAerase.class, global);
         registerBuiltInOperation(MUAeval.class, global);
-        registerBuiltInOperation(MUAholdprint.class, global);
+        registerBuiltInOperation(MUAfalse.class, global);
+        registerBuiltInOperation(MUAhold.class, global);
+        registerBuiltInOperation(MUAiff.class, global);
+        registerBuiltInOperation(MUAift.class, global);
+        registerBuiltInOperation(MUAisname.class, global);
         registerBuiltInOperation(MUAlist.class, global);
         registerBuiltInOperation(MUAmake.class, global);
         registerBuiltInOperation(MUAoutput.class, global);
         registerBuiltInOperation(MUAprint.class, global);
+        registerBuiltInOperation(MUAread.class, global);
+        registerBuiltInOperation(MUAreadlist.class, global);
+        registerBuiltInOperation(MUArepeat.class, global);
         registerBuiltInOperation(MUAstop.class, global);
+        registerBuiltInOperation(MUAtest.class, global);
         registerBuiltInOperation(MUAthing.class, global);
+        registerBuiltInOperation(MUAtrue.class, global);
     }
 
     private void registerBuiltInOperation(Class Op, Namespace namespace) {
@@ -132,22 +143,6 @@ public class MUACore {
                         ErrorStringResource.not_operationizable, token.val);
                 throw new MakeObjectFailureException();
             }
-
-//            if(found instanceof BuiltInOperation) {
-//                head = found;
-//            } else if(found instanceof ExprListObject) {
-//                try {
-//                    head = new CustomOperation((ExprListObject)found);
-//                } catch (UnOperationizableListException e) {
-//                    MUAErrorMessage.error(ErrorStringResource.making_objects,
-//                            ErrorStringResource.not_operationizable, token.val);
-//                    throw new MakeObjectFailureException();
-//                }
-//            } else {
-//                MUAErrorMessage.error(ErrorStringResource.making_objects,
-//                        ErrorStringResource.not_operationizable, token.val);
-//                throw new MakeObjectFailureException();
-//            }
 
             exprList.objectList.add(head);
             for(int i = 0; i < ((OperationObject)found).getArgc(); i++) {

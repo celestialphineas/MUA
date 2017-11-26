@@ -4,13 +4,14 @@ import MUABackEnd.MUAObjects.*;
 import MUAMessageUtil.ErrorStringResource;
 import MUAMessageUtil.MUAErrorMessage;
 
-public class MUAmake extends BuiltInOperation {
-    public MUAmake() {
-        name = "make";
+import java.util.LinkedList;
+
+public class MUArepeat extends BuiltInOperation {
+    public MUArepeat() {
+        name = "repeat";
         argc = 2;
     }
     @Override
-    // The make operation is lazy, it works in "set delay" manner
     public MUAObject getResult(ExprListObject expr_)
     throws MUAStackOverflowException, MUARuntimeException {
         StackTrace.getInstance().push(name);
@@ -21,30 +22,27 @@ public class MUAmake extends BuiltInOperation {
             ((ExprListObject) obj1).evalExpr();
             obj1 = ((ExprListObject) obj1).getReturnVal();
         }
-        if(!(obj1 instanceof WordObject)) {
+        if(!(obj1 instanceof NumObject)
+        || !(obj2 instanceof ExprListObject)) {
             String type1 = "null", type2 = "null";
             if(obj1 != null) type1 = obj1.typeName();
             if(obj2 != null) type2 = obj2.typeName();
-            MUAErrorMessage.error(ErrorStringResource.operation_make,
+            MUAErrorMessage.error(ErrorStringResource.operation_repeat,
                 ErrorStringResource.incompatible_type,
-                type1+ ", " + type2);
+                type1 + ", " + type2);
             throw new MUARuntimeException();
         }
-        MUAObject result = obj2;
-        if(obj2 instanceof ExprListObject) {
-            MUAObject head = ((ExprListObject)obj2).objectList.get(0);
-            if(!head.toString().equals("list")) {
-                ((ExprListObject)obj2).evalExpr();
-                result = ((ExprListObject)obj2).getReturnVal();
-            }
+        // Round
+        int n = (int)(((NumObject)obj1).getVal() + 0.5);
+        MUAObject result = null;
+        for(int i = 0; i < n; i++) {
+            ExprListObject runExpr = new ExprListObject();
+            runExpr.objectList = new LinkedList<>(((ExprListObject) obj2).objectList);
+            runExpr.namespace = ((ExprListObject) obj2).namespace;
+            runExpr.evalExpr();
+            result = runExpr.getReturnVal();
+            if(runExpr.isEvalDone()) break;
         }
-        // Binding
-        if(result != null) {
-            expr_.namespace.set(((WordObject)obj1).getVal(), result);
-        } else {
-            expr_.namespace.unset(((WordObject)obj1).getVal());
-        }
-        StackTrace.getInstance().pop();
         return result;
     }
 }
