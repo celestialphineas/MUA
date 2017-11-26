@@ -42,6 +42,11 @@ public class CustomOperation extends OperationObject {
             WordObject word = (WordObject)argDeclaration.objectList.get(i);
             MUAObject obj = expr.objectList.get(i);
             if(word == null) continue;
+            // Eval parameter
+            if(obj instanceof ExprListObject) {
+                ((ExprListObject) obj).evalExpr();
+                obj = ((ExprListObject) obj).getReturnVal();
+            }
             localEnvList.namespace.set(word.getVal(), obj);
             // Test use: 
             // System.out.println("Env list namespace: " + localEnvList.namespace.getName());

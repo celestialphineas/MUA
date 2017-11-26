@@ -13,7 +13,6 @@ public class MUAtest extends BuiltInOperation {
     public MUAObject getResult(ExprListObject expr)
     throws MUAStackOverflowException, MUARuntimeException {
         StackTrace.getInstance().push(name);
-        expr.setEvalDone();
         StackTrace.getInstance().pop();
         if(expr.objectList.size() <= 1) {
             return null;
@@ -26,9 +25,9 @@ public class MUAtest extends BuiltInOperation {
         }
         if(result instanceof BooleanObject) {
             if(((BooleanObject) result).getVal()) {
-                expr.setTest();
+                expr.namespace.setTest();
             } else {
-                expr.unsetTest();
+                expr.namespace.unsetTest();
             }
             return result;
         }

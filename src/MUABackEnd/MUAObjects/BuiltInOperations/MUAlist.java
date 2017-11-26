@@ -29,7 +29,7 @@ public class MUAlist extends BuiltInOperation {
                 if(((ExprListObject) obj).isEvalDone()) {
                     if(returnVal != null) return returnVal;
                     else {
-                        result.objectList.add(returnVal);
+                        if(returnVal != null) result.objectList.add(returnVal);
                         return result;
                     }
                 }

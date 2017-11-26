@@ -9,6 +9,8 @@ public class Namespace implements MUAObject {
     protected String name;
     protected Namespace parent;
     protected Map<String, MUAObject> hashMap;
+    // A boolean flag for "ift" and "iff"
+    private int testReturnVal = -1;
 
     public Namespace(String name_, Namespace parent_) {
         name = name_; parent = parent_;
@@ -60,6 +62,13 @@ public class Namespace implements MUAObject {
             hashMap.remove(key);
         }
     }
+
+    // Set the testReturnVal flag
+    public void setTest()           { testReturnVal = 1; }
+    public void unsetTest()         { testReturnVal = 0; }
+    public void clearTest()         { testReturnVal = -1; }
+    public boolean isTestTrue()     { return testReturnVal == 1; }
+    public boolean isTestFalse()    { return testReturnVal == 0; }
 
     @Override
     public boolean isAtomic()   { return false; }

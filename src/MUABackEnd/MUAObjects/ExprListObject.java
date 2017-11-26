@@ -18,8 +18,6 @@ public class ExprListObject implements MUAObject {
     // Set only when the sublist wishes to block the parent from further
     // evaluation.
     private boolean evalDone = false;
-    // A boolean flag for "ift" and "iff"
-    private int testReturnVal = -1;
     public List<MUAObject> objectList;
     public ExprListObject() {
         objectList = new LinkedList<>();
@@ -45,12 +43,6 @@ public class ExprListObject implements MUAObject {
     public void setEvalDone()   { evalDone = true; }
     public void unsetEvalDone() { evalDone = false; }
     public boolean isEvalDone() { return evalDone; }
-    // Set the testReturnVal flag
-    public void setTest()           { testReturnVal = 1; }
-    public void unsetTest()         { testReturnVal = 0; }
-    public void clearTest()         { testReturnVal = -1; }
-    public boolean isTestTrue()     { return testReturnVal == 1; }
-    public boolean isTestFalse()    { return testReturnVal == 0; }
     // Allocate namespace for the exprList
     public Namespace allocateNamespace(Namespace parent) {
         namespace = new Namespace("localNamespace" + namespaceSerial, parent);

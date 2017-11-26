@@ -13,9 +13,6 @@ public class MUAoutput extends BuiltInOperation {
         StackTrace.getInstance().push(name);
         expr.setEvalDone();
         StackTrace.getInstance().pop();
-        if(expr.objectList.size() <= 1) {
-            return null;
-        }
         MUAObject result = expr.objectList.get(1);
         // Eval
         if(result instanceof ExprListObject) {
