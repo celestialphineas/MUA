@@ -20,7 +20,7 @@ public class MUAreadlist extends BuiltInOperation {
         list.objectList.add(new MUAlist());
         for(String s : strlst) {
             char ch = s.charAt(0);
-            if(ch == '.' || ch == '+' || ch == '-') {
+            if(ch == '.' || ch == '+' || ch == '-' || Character.isDigit(ch)) {
                 try {
                     list.objectList.add(new NumObject(s));
                 } catch (NumberFormatException e) {

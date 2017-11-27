@@ -28,6 +28,10 @@ public class MUAadd extends BuiltInOperation {
             StackTrace.getInstance().pop();
             return new NumObject(result);
         }
+        if(obj1 instanceof WordObject || obj2 instanceof WordObject) {
+            StackTrace.getInstance().pop();
+            return new WordObject(obj1.toString() + obj2.toString());
+        }
         String type1 = "unknown", type2 = "unknown";
         if(obj1 != null) type1 = obj1.typeName();
         if(obj2 != null) type2 = obj2.typeName();

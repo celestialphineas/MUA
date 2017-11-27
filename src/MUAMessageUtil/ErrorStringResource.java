@@ -27,8 +27,8 @@ public enum ErrorStringResource {
     operation_test("Operation test"),
     operation_thing("Operation thing"),
     mua_custom_operation("Custom operation"),
-    too_many_parentheses("You've got %% more right parentheses. "),
-    too_many_brackets("You've got %% more right brackets. "),
+    too_many_parentheses("You've got %% more right parentheses(is). "),
+    too_many_brackets("You've got %% more right bracket(s). "),
     undefined_reference("Undefined reference to \"%%\". "),
     undefined_namespace("Undefined reference to namespace \"%%\". "),
     unexpected_token("Unexpected token \"%%\". "),
@@ -40,7 +40,7 @@ public enum ErrorStringResource {
     operationization_internal("Operationization internal error: \"%%\". "),
     stack_overflow("Call stack overflow: \"%%\". "),
     runtime_error("Runtime error: \"%%\". "),
-    incompatible_type("Incompatible type %%. ");
+    incompatible_type("Incompatible type: %%. ");
     private String resourceVal;
     ErrorStringResource(String str) {
         resourceVal = str;

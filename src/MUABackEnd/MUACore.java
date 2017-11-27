@@ -31,6 +31,16 @@ public class MUACore {
         // Add built-in functions
         registerBuiltInOperation(MUAadd.class, global);
         registerBuiltInOperation(MUAand.class, global);
+        registerBuiltInOperation(MUAchaster.class, global);
+        registerBuiltInOperation(MUAchendl.class, global);
+        registerBuiltInOperation(MUAchlbrac.class, global);
+        registerBuiltInOperation(MUAchlparenth.class, global);
+        registerBuiltInOperation(MUAchminus.class, global);
+        registerBuiltInOperation(MUAchplus.class, global);
+        registerBuiltInOperation(MUAchrbrac.class, global);
+        registerBuiltInOperation(MUAchslash.class, global);
+        registerBuiltInOperation(MUAchspace.class, global);
+        registerBuiltInOperation(MUAchtab.class, global);
         registerBuiltInOperation(MUAdeclare.class, global);
         registerBuiltInOperation(MUAdiv.class, global);
         registerBuiltInOperation(MUAeq.class, global);
@@ -88,11 +98,14 @@ public class MUACore {
             try {
                 MUAObject obj = makeObject(tokens, GlobalNamespace.getInstance());
                 try {
-                    ((ExprListObject) obj).evalExpr();
-                    MUAObject returnVal = ((ExprListObject) obj).getReturnVal();
-                    if(returnVal != null) {
-                        result.add(returnVal);
+                    if(obj instanceof ExprListObject) {
+                        ((ExprListObject) obj).evalExpr();
+                        MUAObject returnVal = ((ExprListObject) obj).getReturnVal();
+                        if(returnVal != null) {
+                            result.add(returnVal);
+                        }
                     }
+                    else result.add(obj);
                 } catch (MUAStackOverflowException e) {
                         MUAErrorMessage.error(ErrorStringResource.mua_core,
                                 ErrorStringResource.stack_overflow, obj.toString());

@@ -16,7 +16,7 @@ public class MUAread extends BuiltInOperation {
         StackTrace.getInstance().push(name);
         String str = MUAIO.getInstance().in.nextLine();
         char ch = str.charAt(0);
-        if(ch == '.' || ch == '+' || ch == '-') {
+        if(ch == '.' || ch == '+' || ch == '-' || Character.isDigit(ch)) {
             try {
                 StackTrace.getInstance().pop();
                 return new NumObject(str);
