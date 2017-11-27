@@ -1,8 +1,9 @@
-package MUAFrontEnd;
+package MUAAbandoned;
 
 // Input: character stream
 // Output: a list of tokens
 
+import MUAFrontEnd.Token;
 import MUAMessageUtil.ErrorStringResource;
 import MUAMessageUtil.MUAErrorMessage;
 
@@ -11,7 +12,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 // The lexical analyzer is a state machine
-public class LexicalAnalyzer {
+public class LexicalAnalyzerOld {
     final private StringBuilder stringBuffer = new StringBuilder();
     final private Deque<String> stringList = new LinkedList<>();
     private boolean completeLine = true;
@@ -21,7 +22,7 @@ public class LexicalAnalyzer {
     private int squareBracketCount = 0;
 
     // Lexical analyzer constructor
-    public LexicalAnalyzer() {}
+    public LexicalAnalyzerOld() {}
     // Send characters to the analyzer
     public void sendChar(char ch) {
         // If meet a blank char
@@ -132,10 +133,8 @@ public class LexicalAnalyzer {
             }
             if(meetColon) {
                 meetColon = false;
-                // If there is no need to support infix, use the statements below
-//                result.add(new Token(Token.Type.OPERATION, "thing"));
-//                result.add(new Token(Token.Type.WORD, lexeme));
-                result.add(new Token(Token.Type.THING, lexeme));
+                result.add(new Token(Token.Type.OPERATION, "thing"));
+                result.add(new Token(Token.Type.WORD, lexeme));
             } else {
                 char ch = lexeme.charAt(0);
                 if(ch == '\"') {
@@ -157,9 +156,6 @@ public class LexicalAnalyzer {
         }
         return result;
     }
-
-    // Convert infix
-    
 
     // Get the results of lexical analysis
     public boolean isCompleteLine() { return completeLine; }
@@ -183,7 +179,7 @@ public class LexicalAnalyzer {
             cleanUp();
             return null;
         }
-        return LexicalAnalyzer.tokenize(getStringList());
+        return LexicalAnalyzerOld.tokenize(getStringList());
     }
 
     // MUA character property utilities

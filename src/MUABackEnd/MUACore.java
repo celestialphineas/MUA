@@ -23,6 +23,11 @@ public class MUACore {
         Namespace global = GlobalNamespace.getInstance();
         // Clear global namespace
         global.clear();
+        // Load core operations
+        loadCoreOperations();
+    }
+    public void loadCoreOperations() {
+        Namespace global = GlobalNamespace.getInstance();
         // Add built-in functions
         registerBuiltInOperation(MUAadd.class, global);
         registerBuiltInOperation(MUAand.class, global);

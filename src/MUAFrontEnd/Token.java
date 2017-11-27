@@ -1,7 +1,7 @@
 package MUAFrontEnd;
 
 public class Token {
-    public enum Type { WORD, OPERATION, NUMBER, EXPROP, LBRACKET, RBRACKET }
+    public enum Type { WORD, OPERATION, NUMBER, THING, EXPROP, LBRACKET, RBRACKET }
     public Type type;
     public String val;
     public Token(Type type_, String val_) {
