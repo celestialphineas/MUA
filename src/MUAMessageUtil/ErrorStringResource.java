@@ -12,6 +12,8 @@ public enum ErrorStringResource {
     operation_div("Operation div"),
     operation_erase("Operation erase"),
     operation_eq("Operation eq"),
+    operation_export("Operation export"),
+    operation_expose("Operation expose"),
     operation_gt("Operation gt"),
     operation_isname("Operation isname"),
     operation_lt("Operation lt"),

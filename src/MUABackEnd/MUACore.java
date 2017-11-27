@@ -20,14 +20,20 @@ public class MUACore {
 
     private MUACore() { MUAInit(); }
     public void MUAInit() {
-        // Add built-in functions
         Namespace global = GlobalNamespace.getInstance();
+        // Clear global namespace
+        global.clear();
+        // Add built-in functions
         registerBuiltInOperation(MUAadd.class, global);
         registerBuiltInOperation(MUAand.class, global);
         registerBuiltInOperation(MUAdeclare.class, global);
         registerBuiltInOperation(MUAdiv.class, global);
         registerBuiltInOperation(MUAeq.class, global);
         registerBuiltInOperation(MUAerase.class, global);
+        registerBuiltInOperation(MUAexport.class,global);
+        registerBuiltInOperation(MUAexportnamespace.class, global);
+        registerBuiltInOperation(MUAexpose.class, global);
+        registerBuiltInOperation(MUAexposenamespace.class, global);
         registerBuiltInOperation(MUAeval.class, global);
         registerBuiltInOperation(MUAfalse.class, global);
         registerBuiltInOperation(MUAgt.class, global);

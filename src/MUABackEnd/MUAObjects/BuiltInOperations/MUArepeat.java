@@ -43,6 +43,7 @@ public class MUArepeat extends BuiltInOperation {
             result = runExpr.getReturnVal();
             if(runExpr.isEvalDone()) break;
         }
+        StackTrace.getInstance().pop();
         return result;
     }
 }

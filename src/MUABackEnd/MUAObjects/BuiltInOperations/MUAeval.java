@@ -12,7 +12,6 @@ public class MUAeval extends BuiltInOperation {
     throws MUAStackOverflowException, MUARuntimeException {
         StackTrace.getInstance().push(name);
         MUAObject result = expr.objectList.get(1);
-        StackTrace.getInstance().pop();
         // Eval
         if(result instanceof ExprListObject) {
             // Eval one more time for operation "thing"
@@ -25,6 +24,7 @@ public class MUAeval extends BuiltInOperation {
                 result = ((ExprListObject)result).getReturnVal();
             }
         }
+        StackTrace.getInstance().pop();
         return result;
     }
 }

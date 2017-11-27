@@ -13,6 +13,7 @@ public class MUAlist extends BuiltInOperation {
         StackTrace.getInstance().push(name);
         ExprListObject expr = new ExprListObject(expr_);
         if(expr.objectList.size() <= 1) {
+            StackTrace.getInstance().pop();
             return expr;
         }
 
@@ -30,6 +31,7 @@ public class MUAlist extends BuiltInOperation {
                     if(returnVal != null) return returnVal;
                     else {
                         if(returnVal != null) result.objectList.add(returnVal);
+                        StackTrace.getInstance().pop();
                         return result;
                     }
                 }

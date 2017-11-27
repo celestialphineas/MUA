@@ -31,7 +31,7 @@ public class Namespace implements MUAObject {
     public MUAObject find(String key) {
         MUAObject found = hashMap.get(key);
         if(found == null) {
-            String[] splitted = key.split(".");
+            String[] splitted = key.split("\\.");
             if(splitted.length < 2) {
                 return parent.find(key);
             }
@@ -61,6 +61,12 @@ public class Namespace implements MUAObject {
         if(key != null) {
             hashMap.remove(key);
         }
+    }
+
+    // Reset namespace
+    public void clear() {
+        hashMap.clear();
+        testReturnVal = -1;
     }
 
     // Set the testReturnVal flag

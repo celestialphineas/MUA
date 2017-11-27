@@ -16,9 +16,9 @@ public class MUAread extends BuiltInOperation {
         StackTrace.getInstance().push(name);
         String str = MUAIO.getInstance().in.nextLine();
         char ch = str.charAt(0);
-        StackTrace.getInstance().pop();
         if(ch == '.' || ch == '+' || ch == '-') {
             try {
+                StackTrace.getInstance().pop();
                 return new NumObject(str);
             } catch (NumberFormatException e) {
                 MUAErrorMessage.error(ErrorStringResource.operation_read,
@@ -26,6 +26,7 @@ public class MUAread extends BuiltInOperation {
                 throw new MUARuntimeException();
             }
         } else {
+            StackTrace.getInstance().pop();
             return new WordObject(str);
         }
     }

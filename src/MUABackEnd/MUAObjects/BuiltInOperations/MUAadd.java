@@ -25,6 +25,7 @@ public class MUAadd extends BuiltInOperation {
         }
         if(obj1 instanceof NumObject && obj2 instanceof NumObject) {
             double result = ((NumObject)obj1).getVal() + ((NumObject)obj2).getVal();
+            StackTrace.getInstance().pop();
             return new NumObject(result);
         }
         String type1 = "unknown", type2 = "unknown";
@@ -33,7 +34,6 @@ public class MUAadd extends BuiltInOperation {
         MUAErrorMessage.error(ErrorStringResource.operation_add,
                 ErrorStringResource.incompatible_type,
                 type1 + ", " + type2);
-        StackTrace.getInstance().pop();
         throw new MUARuntimeException();
     }
 }

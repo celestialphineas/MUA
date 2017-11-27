@@ -32,7 +32,7 @@ public class GlobalNamespace extends Namespace {
     public MUAObject find(String key) {
         MUAObject found = hashMap.get(key);
         if(found == null) {
-            String[] splitted = key.split(".");
+            String[] splitted = key.split("\\.");
             if(splitted.length < 2) {
                 MUAErrorMessage.error(ErrorStringResource.finding_variable,
                         ErrorStringResource.undefined_reference, key);
@@ -44,7 +44,7 @@ public class GlobalNamespace extends Namespace {
                 foundNamespace = ((Namespace)foundNamespace).hashMap.get(splitted[i]);
                 if(foundNamespace == null || !(foundNamespace instanceof Namespace)) {
                     MUAErrorMessage.error(ErrorStringResource.finding_namespace,
-                            ErrorStringResource.undefined_namespace, splitted[0]);
+                            ErrorStringResource.undefined_namespace, splitted[i]);
                     return null;
                 }
             }
