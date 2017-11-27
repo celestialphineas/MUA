@@ -13,7 +13,7 @@ import java.io.FileReader;
 import java.util.List;
 import java.util.Scanner;
 
-public class Main {
+public class MUAInterpreter {
     public static void main(String[] args) {
         // Flags
         boolean flagInteractiveMode = true;
@@ -134,7 +134,10 @@ public class Main {
                         continue;
                     }
                     MUACore.evaluate(tokenList);
+                    StackTrace.getInstance().clear();
                 } catch (Exception e) {
+                    MUAErrorMessage.error(ErrorStringResource.mua_main, ErrorStringResource.unknow_internal_error,
+                        e.toString());
                     System.exit(1);
                 }
             }

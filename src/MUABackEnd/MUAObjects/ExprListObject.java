@@ -12,6 +12,7 @@ import java.util.ListIterator;
 // An ExprList is a sequence of MUA objects, with its first element an operator head
 // and arguments followed
 public class ExprListObject implements MUAObject {
+    private static boolean lispForm = false;
     private static int namespaceSerial = 1;
     public Namespace namespace = GlobalNamespace.getInstance();
     private MUAObject returnVal = null;
@@ -38,6 +39,8 @@ public class ExprListObject implements MUAObject {
             return ((OperationObject)(objectList.get(0))).getName();
         else return "";
     }
+    public static void setLispForm()    { lispForm = true; }
+    public static void unsetLispForm()  { lispForm = false; }
 
     // Operations on the evalDone flag
     public void setEvalDone()   { evalDone = true; }
@@ -94,12 +97,27 @@ public class ExprListObject implements MUAObject {
     @Override
     public String toString() {
         StringBuilder buffer = new StringBuilder();
-        buffer.append("( ");
-        for(MUAObject object : objectList) {
-            buffer.append(object.toString());
-            buffer.append(' ');
+        boolean isList = false;
+        if(lispForm) {
+            buffer.append("( ");
+            for(MUAObject object : objectList) {
+                buffer.append(object.toString());
+                buffer.append(' ');
+            }
+            buffer.append(')');
+            return buffer.toString();
+        } else {
+            for(MUAObject object : objectList) {
+                if(object.toString().equals("list")) {
+                    isList = true;
+                    buffer.append("[ ");
+                    continue;
+                }
+                buffer.append(object.toString());
+                buffer.append(' ');
+            }
+            if(isList) buffer.append("]");
         }
-        buffer.append(')');
         return buffer.toString();
     }
 }

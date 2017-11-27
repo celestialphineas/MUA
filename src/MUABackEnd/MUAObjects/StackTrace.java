@@ -7,7 +7,7 @@ public class StackTrace {
     public static StackTrace getInstance() {
         return ourInstance;
     }
-    private static int maxSize = 1000;
+    private static int maxSize = 2048;
     Stack<String> callStack = new Stack<>();
 
     private StackTrace() { }
@@ -20,6 +20,14 @@ public class StackTrace {
     }
     public void pop()   { callStack.pop(); }
     public void clear() { callStack.clear(); }
-    static public void setMaxSize(int size) { maxSize = size; }
+    @Override
+    public String toString() {
+        StringBuilder buffer = new StringBuilder();
+        for(String str : callStack) {
+            buffer.append("[[" + str + "]] ");
+        }
+        return buffer.toString();
+    }
+    static public int setMaxSize(int size) { return maxSize = size; }
     static public int getMaxSize() { return maxSize; }
 }

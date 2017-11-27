@@ -5,6 +5,7 @@ import MUABackEnd.MUANamespace.Namespace;
 import MUABackEnd.MUAObjects.*;
 import MUABackEnd.MUAObjects.BuiltInOperations.*;
 import MUAFrontEnd.Token;
+import MUAIO.MUAIO;
 import MUAMessageUtil.ErrorStringResource;
 import MUAMessageUtil.MUAErrorMessage;
 import java.util.Deque;
@@ -13,11 +14,11 @@ import java.util.List;
 
 // The MUA core
 public class MUACore {
+    private static boolean showStackTrace = false;
     private static MUACore ourInstance = new MUACore();
-    public static MUACore getInstance() {
-        return ourInstance;
-    }
-
+    public static MUACore getInstance()         { return ourInstance; }
+    public static void setShowStackTrace()      { showStackTrace = true; }
+    public static void unsetShowStackTrace()    { showStackTrace = false; }
     private MUACore() { MUAInit(); }
     public void MUAInit() {
         Namespace global = GlobalNamespace.getInstance();
@@ -26,7 +27,11 @@ public class MUACore {
         // Load core operations
         loadCoreOperations();
     }
-    public void loadCoreOperations() {
+    public static void exit() {
+        System.exit(0);
+    }
+
+    public static void loadCoreOperations() {
         Namespace global = GlobalNamespace.getInstance();
         // Add built-in functions
         registerBuiltInOperation(MUAadd.class, global);
@@ -45,6 +50,7 @@ public class MUACore {
         registerBuiltInOperation(MUAdiv.class, global);
         registerBuiltInOperation(MUAeq.class, global);
         registerBuiltInOperation(MUAerase.class, global);
+        registerBuiltInOperation(MUAexit.class, global);
         registerBuiltInOperation(MUAexport.class,global);
         registerBuiltInOperation(MUAexportnamespace.class, global);
         registerBuiltInOperation(MUAexpose.class, global);
@@ -67,7 +73,10 @@ public class MUACore {
         registerBuiltInOperation(MUAprint.class, global);
         registerBuiltInOperation(MUAread.class, global);
         registerBuiltInOperation(MUAreadlist.class, global);
+        registerBuiltInOperation(MUAreloadcore.class, global);
         registerBuiltInOperation(MUArepeat.class, global);
+        registerBuiltInOperation(MUAsetcalldepth.class, global);
+        registerBuiltInOperation(MUAsilence.class, global);
         registerBuiltInOperation(MUAstop.class, global);
         registerBuiltInOperation(MUAsub.class, global);
         registerBuiltInOperation(MUAtest.class, global);
@@ -75,7 +84,7 @@ public class MUACore {
         registerBuiltInOperation(MUAtrue.class, global);
     }
 
-    private void registerBuiltInOperation(Class Op, Namespace namespace) {
+    private static void registerBuiltInOperation(Class Op, Namespace namespace) {
         try {
             Object object = Op.newInstance();
             if(object instanceof OperationObject) {
@@ -107,11 +116,20 @@ public class MUACore {
                     }
                     else result.add(obj);
                 } catch (MUAStackOverflowException e) {
-                        MUAErrorMessage.error(ErrorStringResource.mua_core,
-                                ErrorStringResource.stack_overflow, obj.toString());
+                    if(showStackTrace)
+                        MUAIO.getInstance().err.println("Stack trace: " + StackTrace.getInstance().toString());
+                    MUAErrorMessage.error(ErrorStringResource.mua_core,
+                        ErrorStringResource.stack_overflow, obj.toString());
                 } catch (MUARuntimeException e) {
-                        MUAErrorMessage.error(ErrorStringResource.mua_core,
-                                ErrorStringResource.runtime_error, obj.toString());
+                    if(showStackTrace)
+                        MUAIO.getInstance().err.println("Stack trace: " + StackTrace.getInstance().toString());
+                    MUAErrorMessage.error(ErrorStringResource.mua_core,
+                            ErrorStringResource.runtime_error, obj.toString());
+                } catch (Exception e) {
+                    if(showStackTrace)
+                        MUAIO.getInstance().err.println("Stack trace: " + StackTrace.getInstance().toString());
+                    MUAErrorMessage.error(ErrorStringResource.mua_core,
+                            ErrorStringResource.unknow_internal_error, e.toString());
                 }
             } catch (MakeObjectFailureException e) {
                 return result;

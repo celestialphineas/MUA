@@ -1,10 +1,12 @@
 package MUABackEnd.MUAObjects.BuiltInOperations;
 
 import MUABackEnd.MUAObjects.*;
+import MUAMessageUtil.ErrorStringResource;
+import MUAMessageUtil.MUAErrorMessage;
 
-public class MUAeval extends BuiltInOperation {
-    public MUAeval() {
-        name = "eval";
+public class MUAsetcalldepth extends BuiltInOperation {
+    public MUAsetcalldepth() {
+        name = "setcalldepth";
         argc = 1;
     }
     @Override
@@ -14,15 +16,18 @@ public class MUAeval extends BuiltInOperation {
         MUAObject result = expr.objectList.get(1);
         // Eval
         if(result instanceof ExprListObject) {
-            // Eval one more time for operation "thing"
-            if(((ExprListObject) result).objectList.get(0).toString().equals("thing")) {
-                ((ExprListObject) result).evalExpr();
-                result = ((ExprListObject) result).getReturnVal();
-            }
-            if(result instanceof ExprListObject) {
-                ((ExprListObject)result).evalExpr();
-                result = ((ExprListObject)result).getReturnVal();
-            }
+            ((ExprListObject)result).evalExpr();
+            result = ((ExprListObject)result).getReturnVal();
+        }
+        if(!(result instanceof NumObject)) {
+            String type1 = "null";
+            if(result != null) type1 = result.typeName();
+            MUAErrorMessage.error(ErrorStringResource.operation_setcalldepth,
+                    ErrorStringResource.incompatible_type, type1);
+            throw new MUARuntimeException();
+        }
+        if(((NumObject) result).getVal() > 1) {
+            StackTrace.setMaxSize((int)((NumObject) result).getVal());
         }
         StackTrace.getInstance().pop();
         return result;

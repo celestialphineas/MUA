@@ -1,3 +1,5 @@
+package MUAAbandoned;
+
 import MUABackEnd.MUACore;
 import MUABackEnd.MUAObjects.MUAObject;
 import MUAFrontEnd.LexicalAnalyzer;
@@ -6,7 +8,7 @@ import MUAFrontEnd.Token;
 import java.util.List;
 import java.util.Scanner;
 
-public class TestMain {
+public class Main {
     public static void main(String[] args) {
         LexicalAnalyzer lexicalAnalyzer = new LexicalAnalyzer();
         Scanner scanner = new Scanner(System.in);
@@ -34,8 +36,8 @@ public class TestMain {
             System.out.println();
 
             // Result
-//            List<MUAObject> result = MUACore.evaluate(tokenList);
-//            if(result != null) System.out.println(result.toString());
+            List<MUAObject> result = MUACore.evaluate(tokenList);
+            if(result != null) System.out.println(result.toString());
         }
     }
 }

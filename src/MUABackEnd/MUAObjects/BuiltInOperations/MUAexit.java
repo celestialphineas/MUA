@@ -1,10 +1,11 @@
 package MUABackEnd.MUAObjects.BuiltInOperations;
 
+import MUABackEnd.MUACore;
 import MUABackEnd.MUAObjects.*;
 
-public class MUAfalse extends BuiltInOperation {
-    public MUAfalse() {
-        name = "false";
+public class MUAexit extends BuiltInOperation {
+    public MUAexit() {
+        name = "exit";
         argc = 0;
     }
     @Override
@@ -12,6 +13,7 @@ public class MUAfalse extends BuiltInOperation {
     throws MUAStackOverflowException, MUARuntimeException {
         StackTrace.getInstance().push(name);
         StackTrace.getInstance().pop();
-        return new BooleanObject(false);
+        MUACore.exit();
+        return null;
     }
 }

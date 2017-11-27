@@ -2,9 +2,9 @@ package MUABackEnd.MUAObjects.BuiltInOperations;
 
 import MUABackEnd.MUAObjects.*;
 
-public class MUAeval extends BuiltInOperation {
-    public MUAeval() {
-        name = "eval";
+public class MUAsilence extends BuiltInOperation {
+    public MUAsilence() {
+        name = "silence";
         argc = 1;
     }
     @Override
@@ -25,6 +25,6 @@ public class MUAeval extends BuiltInOperation {
             }
         }
         StackTrace.getInstance().pop();
-        return result;
+        return null;
     }
 }

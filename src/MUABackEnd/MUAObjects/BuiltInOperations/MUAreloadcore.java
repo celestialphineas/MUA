@@ -3,8 +3,8 @@ package MUABackEnd.MUAObjects.BuiltInOperations;
 import MUABackEnd.MUACore;
 import MUABackEnd.MUAObjects.*;
 
-public class MUAreload extends BuiltInOperation {
-    public MUAreload() {
+public class MUAreloadcore extends BuiltInOperation {
+    public MUAreloadcore() {
         name = "reloadcore";
         argc = 0;
     }
@@ -13,7 +13,7 @@ public class MUAreload extends BuiltInOperation {
     throws MUAStackOverflowException, MUARuntimeException {
         StackTrace.getInstance().push(name);
         StackTrace.getInstance().pop();
-        MUACore.exit();
+        MUACore.loadCoreOperations();
         return null;
     }
 }
