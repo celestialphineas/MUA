@@ -78,10 +78,15 @@ public class MUACore {
         }
     }
 
-    public static List<MUAObject> evaluate(List<MUAObject> exprList) {
+    public static List<MUAObject> evaluate(List<Token> tokenList) {
         List<MUAObject> result = new LinkedList<>();
-        for(MUAObject obj : exprList) {
-            if(obj instanceof ExprListObject) {
+        if(tokenList == null || tokenList.isEmpty()) {
+            return result;
+        }
+        Deque<Token> tokens = new LinkedList<>(tokenList);
+        while (!tokens.isEmpty()) {
+            try {
+                MUAObject obj = makeObject(tokens, GlobalNamespace.getInstance());
                 try {
                     ((ExprListObject) obj).evalExpr();
                     MUAObject returnVal = ((ExprListObject) obj).getReturnVal();
@@ -89,30 +94,14 @@ public class MUACore {
                         result.add(returnVal);
                     }
                 } catch (MUAStackOverflowException e) {
-                    MUAErrorMessage.error(ErrorStringResource.mua_core,
-                        ErrorStringResource.stack_overflow, obj.toString());
+                        MUAErrorMessage.error(ErrorStringResource.mua_core,
+                                ErrorStringResource.stack_overflow, obj.toString());
                 } catch (MUARuntimeException e) {
-                    MUAErrorMessage.error(ErrorStringResource.mua_core,
-                        ErrorStringResource.runtime_error, obj.toString());
+                        MUAErrorMessage.error(ErrorStringResource.mua_core,
+                                ErrorStringResource.runtime_error, obj.toString());
                 }
-            } else if(obj != null) {
-                result.add(obj);
-            }
-        }
-        return result;
-    }
-
-    public static List<MUAObject> makeExprList(List<Token> tokenList) {
-        if(tokenList == null || tokenList.isEmpty()) {
-            return null;
-        }
-        List<MUAObject> result = new LinkedList<>();
-        Deque<Token> tokens = new LinkedList<>(tokenList);
-        while(!tokens.isEmpty()) {
-            try {
-                result.add(makeObject(tokens, GlobalNamespace.getInstance()));
             } catch (MakeObjectFailureException e) {
-                return null;
+                return result;
             }
         }
         return result;

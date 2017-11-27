@@ -64,6 +64,6 @@ public class MUAdeclare extends BuiltInOperation {
         makeExpr.objectList.add(newobj2);
         makeExpr.evalExpr();
         StackTrace.getInstance().pop();
-        return makeExpr.getReturnVal();
+        return null;
     }
 }

@@ -85,12 +85,20 @@ public class LexicalAnalyzer {
         }
         completeLine = checkLineCompleteness();
     }
-    public void sendLine(String string) {
-        for(int i = 0; i < string.length(); i++) {
-            sendChar(string.charAt(i));
+    public void sendLine(String input) {
+        input = preprocess(input);
+        for(int i = 0; i < input.length(); i++) {
+            sendChar(input.charAt(i));
         }
         sendChar('\n');
         completeLine = checkLineCompleteness();
+    }
+    // Pre-process strings
+    // Like, declare before definition
+    private static String preprocess(String input) {
+        if(input == null) return null;
+        return input.replaceAll("make\\s*\"(.*?)\\s*\\[\\s*\\[(.*?)\\]",
+                "declare \"$1 [$2] make \"$1 [[$2]");
     }
     public void sendStringBuffer(StringBuilder buffer) {
         for(int i = 0; i < buffer.length(); i++) {
@@ -159,7 +167,7 @@ public class LexicalAnalyzer {
     }
 
     // Convert infix
-    
+
 
     // Get the results of lexical analysis
     public boolean isCompleteLine() { return completeLine; }
