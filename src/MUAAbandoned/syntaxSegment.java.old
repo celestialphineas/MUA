@@ -1,0 +1,103 @@
+static private List<Token> eliminateUnary(List<Token> tokenList) {
+        List<Token> result = new LinkedList<>();
+        Deque<Token> tokens = new LinkedList<>(tokenList);
+        while(!tokens.isEmpty()) {
+            Token token = tokens.getFirst();
+            if(isLeftParenthesisToken(token) || token.type == Token.Type.LBRACKET) {
+                result.add(token);
+                tokens.removeFirst();
+            }
+            List<Token> recResult = recursivelyElimUnary(tokens);
+            if(recResult != null) result.addAll(recResult);
+        }
+    }
+    enum PlusMinusState { OPSEQ, UNARYSEQ };
+    static private List<Token> recursivelyElimUnary(Deque<Token> tokenList) {
+        int sign = 0;
+        PlusMinusState plusMinusState = UNARYSEQ;
+        List<Token> result = new ArrayList<>();
+        while(!tokenList.isEmpty()) {
+            Token token = tokenList.getFirst();
+            if(isLowPrioInfixOperatorToken(token)) {
+                if(sign == 0) sign = 1;
+                if(token.val.equals("-")) sign = -sign;
+                continue;
+            } else if(isLeftParenthesisToken(token) || token.type == Token.Type.LBRACKET) {
+                tokenList.removeFirst();
+                List<Token> recResult = recursivelyElimUnary(tokenList);
+                if(sign == -1) {
+                    if(plusMinusState == UNARYSEQ) {
+                        result.add(new Token(Token.Type.EXPROP, "("));
+                        result.add(new Token(Token.Type.OPERATION, "sub"));
+                        result.add(new Token(Token.Type.NUMBER, "0"));
+                        if(recResult != null) result.addAll(recResult);
+                        result.add(new Token(Token.Type.EXPROP, ")"));
+                    } else {
+                        result.add(new Token(Token.Type.EXPROP, "-"));
+                        if(recResult != null) result.addAll(recResult);
+                    }
+                } else if(sign == 1) {
+                    if(plusMinusState == OPSEQ) {
+                        result.add(new Token(Token.Type.EXPROP, "+"));
+                        if(recResult != null) result.addAll(recResult);
+                    }
+                }
+                result.add(token);
+                return result;
+            } else if(isRightParenthesisToken(token) || token.type == Token.Type.RBRACKET) {
+                result.add(token);
+                tokenList.removeFirst();
+                return result;
+            }
+        }
+        for(ListIterator<Token> it = tokenList.listIterator(); it.hasNext(); ) {
+            Token token = it.next();
+            if(isLowPrioInfixOperatorToken(token)) {
+                if(sign == 0) sign = 1;
+                if(token.val.equals("-")) sign = -sign;
+                continue;
+            }
+
+            if(sign == -1) {
+                if(plusMinusState == UNARYSEQ) {
+                    result.add(new Token(Token.Type.EXPROP, "("));
+                    result.add(new Token(Token.Type.OPERATION, "sub"));
+                    result.add(new Token(Token.Type.NUMBER, "0"));
+                    if(token.type == Token.Type.EXPROP || token.type == Token.Type.LBRACKET
+                            || token.type == Token.Type.RBRACKET) {
+                        MUAErrorMessage.error(ErrorStringResource.lexical_analyzing,
+                                ErrorStringResource.unary_unsupported, token.val);
+                        return null;
+                    }
+                    sign = 0;
+                    if(isHighPrioInfixOperatorToken(token) || isLeftParenthesisToken(token)
+                            || token.type == Token.Type.LBRACKET) {
+                        System.out.println("Hello: " + token);
+                        plusMinusState = UNARYSEQ;
+                    } else {
+                        plusMinusState = OPSEQ;
+                    }
+                    result.add(token);
+                    result.add(new Token(Token.Type.EXPROP, ")"));
+                    continue;
+                } else {
+                    result.add(new Token(Token.Type.EXPROP, "-"));
+                }
+                sign = 0;
+            } else if(sign == 1) {
+                if(plusMinusState == OPSEQ) {
+                    result.add(new Token(Token.Type.EXPROP, "+"));
+                }
+                sign = 0;
+            }
+
+            if(isHighPrioInfixOperatorToken(token)) {
+                plusMinusState = UNARYSEQ;
+            } else {
+                plusMinusState = OPSEQ;
+            }
+
+            result.add(token);
+        }
+        return result;
+    }

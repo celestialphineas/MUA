@@ -91,3 +91,5 @@ main中清除trace stack
 添加lisp和mua形式切换开关
 
 与其set delay不如set和hold，list单独对待。
+
+为了规避歧义，但凡正负号和后面连到一起而前面也没有负号

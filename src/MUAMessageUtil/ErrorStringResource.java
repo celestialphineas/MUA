@@ -32,6 +32,7 @@ public enum ErrorStringResource {
     undefined_reference("Undefined reference to \"%%\". "),
     undefined_namespace("Undefined reference to namespace \"%%\". "),
     unexpected_token("Unexpected token \"%%\". "),
+    unary_unsupported("MUA does not allow unary before non-atomic expression \"%%\". "),
     not_operationizable("Object \"%%\" is not operationizable. "),
     number_format("Unrecognized number format \"%%\". "),
     too_few_operands("Too few operands for operation \"%%\". "),

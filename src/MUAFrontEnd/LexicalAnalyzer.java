@@ -6,9 +6,7 @@ package MUAFrontEnd;
 import MUAMessageUtil.ErrorStringResource;
 import MUAMessageUtil.MUAErrorMessage;
 
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 // The lexical analyzer is a state machine
 public class LexicalAnalyzer {
@@ -72,14 +70,21 @@ public class LexicalAnalyzer {
                 // [1-1]    -> [mul 1 1]
                 // [1- 1]   -> [mul 1 1]
                 // [1 -1]   -> [1 -1]
-                if((ch == '-' || ch == '+') && minusBreak) {
+                 if((ch == '+' || ch == '-') && minusBreak) {
                     stringBuffer.append(ch);
                 } else if(!readingComment) {
-                    stringList.addLast(Character.toString(ch));
+                     stringList.addLast(Character.toString(ch));
                 }
             }
         } else { // Ordinary character
             if(!readingComment) {
+                if(stringBuffer.length() == 1) {
+                    if(stringBuffer.charAt(0) == '+' || stringBuffer.charAt(0) == '-')
+                        if(ch != '.' && !Character.isDigit(ch)) {
+                            stringList.addLast(stringBuffer.toString());
+                            stringBuffer.delete(0, stringBuffer.length());
+                        }
+                }
                 stringBuffer.append(ch);
             }
         }
@@ -163,11 +168,185 @@ public class LexicalAnalyzer {
                 }
             }
         }
+        // Infix conversion
+        result = infixConvert(result);
         return result;
     }
 
     // Convert infix
+    static public List<Token> infixConvert(List<Token> tokenList) {
+        // First round: handle high priority operators
+        List<Token> highEliminated = eliminateHighPrio(tokenList);
+        // Second round: handle low priority operators
+        List<Token> lowEliminated = eliminateLowPrio(highEliminated);
+        // Third round: remove all expression operators and thing tokens
+        List<Token> result = new LinkedList<>();
+        for(Token token : lowEliminated) {
+            if(token.type == Token.Type.THING) {
+                result.add(new Token(Token.Type.OPERATION, "thing"));
+                result.add(new Token(Token.Type.WORD, token.val));
+            } else if(token.type == Token.Type.EXPROP) {
+            } else {
+                result.add(token);
+            }
+        }
+        return result;
+    }
 
+    static private List<Token> eliminateHighPrio(List<Token> tokenList) {
+        List<Token> result = new LinkedList<>();
+        Deque<Token> tokens = new LinkedList<>(tokenList);
+        while(!tokens.isEmpty()) {
+            Token token = tokens.getFirst();
+            List<Token> recResult = recursivelyElimHighPrio(tokens);
+            if(recResult != null) result.addAll(recResult);
+        }
+        return result;
+    }
+    static private List<Token> eliminateLowPrio(List<Token> tokenList) {
+        List<Token> result = new LinkedList<>();
+        Deque<Token> tokens = new LinkedList<>(tokenList);
+        while(!tokens.isEmpty()) {
+            Token token = tokens.getFirst();
+            List<Token> recResult = recursivelyElimLowPrio(tokens);
+            if(recResult != null) result.addAll(recResult);
+        }
+        return result;
+    }
+
+    static private LinkedList<Token> recursivelyElimHighPrio(Deque<Token> tokens) {
+        LinkedList<Token> result = new LinkedList<>();
+        final LinkedList<Token> operand1 = new LinkedList<>();
+        Token operator = null;
+
+        while(!tokens.isEmpty()) {
+            Token token = tokens.getFirst();
+            tokens.removeFirst();
+            if(isLeftParenthesisToken(token) || token.type == Token.Type.LBRACKET) {
+                LinkedList<Token> subList = recursivelyElimHighPrio(tokens);
+                subList.addFirst(token);
+                if(operator != null) {
+                    if(operator.val.equals("*"))
+                        operand1.addFirst(new Token(Token.Type.OPERATION, "mul"));
+                    else if(operator.val.equals("/"))
+                        operand1.addFirst(new Token(Token.Type.OPERATION, "div"));
+                    else
+                        operand1.addFirst(new Token(Token.Type.OPERATION, "mod"));
+                    operand1.addFirst(new Token(Token.Type.EXPROP, "("));
+                    operand1.addAll(subList);
+                    operand1.add(new Token(Token.Type.EXPROP, ")"));
+                    operator = null;
+                } else {
+                    result.addAll(operand1);
+                    operand1.clear();
+                    operand1.addAll(subList);
+                }
+                continue;
+            } else if(isRightParenthesisToken(token) || token.type == Token.Type.RBRACKET) {
+                if(operator != null) {
+                    MUAErrorMessage.warn(ErrorStringResource.lexical_analyzing,
+                        ErrorStringResource.unexpected_token, operator.val);
+                    result.clear();
+                } else {
+                    result.addAll(operand1);
+                }
+                result.add(token);
+                return result;
+            } else if(isHighPrioInfixOperatorToken(token)) {
+                if(operand1.isEmpty()) {
+                    // For plus and minus, here goes the unary handling
+                    MUAErrorMessage.warn(ErrorStringResource.lexical_analyzing,
+                        ErrorStringResource.unexpected_token, token.val);
+                }
+                operator = token;
+                continue;
+            }
+
+            if(operator != null) {
+                if(operator.val.equals("*"))
+                    operand1.addFirst(new Token(Token.Type.OPERATION, "mul"));
+                else if(operator.val.equals("/"))
+                    operand1.addFirst(new Token(Token.Type.OPERATION, "div"));
+                else
+                    operand1.addFirst(new Token(Token.Type.OPERATION, "mod"));
+                operand1.addFirst(new Token(Token.Type.EXPROP, "("));
+                operand1.add(token);
+                operand1.add(new Token(Token.Type.EXPROP, ")"));
+                operator = null;
+            } else {
+                result.addAll(operand1);
+                operand1.clear();
+                operand1.add(token);
+            }
+        }
+        result.addAll(operand1);
+        return result;
+    }
+    static private LinkedList<Token> recursivelyElimLowPrio(Deque<Token> tokens) {
+        LinkedList<Token> result = new LinkedList<>();
+        final LinkedList<Token> operand1 = new LinkedList<>();
+        Token operator = null;
+
+        while(!tokens.isEmpty()) {
+            Token token = tokens.getFirst();
+            tokens.removeFirst();
+            if(isLeftParenthesisToken(token) || token.type == Token.Type.LBRACKET) {
+                LinkedList<Token> subList = recursivelyElimLowPrio(tokens);
+                subList.addFirst(token);
+                if(operator != null) {
+                    if(operand1.isEmpty()) operand1.add(new Token(Token.Type.NUMBER, "0"));
+                    if(operator.val.equals("+"))
+                        operand1.addFirst(new Token(Token.Type.OPERATION, "add"));
+                    else
+                        operand1.addFirst(new Token(Token.Type.OPERATION, "sub"));
+                    operand1.addFirst(new Token(Token.Type.EXPROP, "("));
+                    operand1.addAll(subList);
+                    operand1.add(new Token(Token.Type.EXPROP, ")"));
+                    operator = null;
+                } else {
+                    result.addAll(operand1);
+                    operand1.clear();
+                    operand1.addAll(subList);
+                }
+                continue;
+            } else if(isRightParenthesisToken(token) || token.type == Token.Type.RBRACKET) {
+                if(operator != null) {
+                    MUAErrorMessage.warn(ErrorStringResource.lexical_analyzing,
+                            ErrorStringResource.unexpected_token, operator.val);
+                    result.clear();
+                } else {
+                    result.addAll(operand1);
+                }
+                result.add(token);
+                return result;
+            } else if(isLowPrioInfixOperatorToken(token)) {
+                if(operator != null) {
+                    if(operator.val.equals(token.val)) operator.val = "+";
+                    else operator.val = "-";
+                }
+                else operator = token;
+                continue;
+            }
+
+            if(operator != null) {
+                if(operand1.isEmpty()) operand1.add(new Token(Token.Type.NUMBER, "0"));
+                if(operator.val.equals("+"))
+                    operand1.addFirst(new Token(Token.Type.OPERATION, "add"));
+                else
+                    operand1.addFirst(new Token(Token.Type.OPERATION, "sub"));
+                operand1.addFirst(new Token(Token.Type.EXPROP, "("));
+                operand1.add(token);
+                operand1.add(new Token(Token.Type.EXPROP, ")"));
+                operator = null;
+            } else {
+                result.addAll(operand1);
+                operand1.clear();
+                operand1.add(token);
+            }
+        }
+        result.addAll(operand1);
+        return result;
+    }
 
     // Get the results of lexical analysis
     public boolean isCompleteLine() { return completeLine; }
@@ -204,5 +383,25 @@ public class LexicalAnalyzer {
     }
     static boolean isExpressionSymbol(char ch) {
         return ch == '+' || ch == '-' || ch == '*' || ch == '/' || ch == '%' || ch == '(' || ch == ')';
+    }
+    // MUA token utilities
+    static boolean isHighPrioInfixOperatorToken(Token token) {
+        if(token.type != Token.Type.EXPROP) return false;
+        if(token.val.equals("*") || token.val.equals("/") || token.val.equals("%")) return true;
+        return false;
+    }
+    static boolean isLowPrioInfixOperatorToken(Token token) {
+        if(token.type != Token.Type.EXPROP) return false;
+        if(token.val.equals("+") || token.val.equals(("-"))) return true;
+        return false;
+    }
+    static boolean isInfixOperatorToken(Token token) {
+        return isHighPrioInfixOperatorToken(token) || isLowPrioInfixOperatorToken(token);
+    }
+    static boolean isLeftParenthesisToken(Token token) {
+        return token.type == Token.Type.EXPROP && token.val.equals("(");
+    }
+    static boolean isRightParenthesisToken(Token token) {
+        return token.type == Token.Type.EXPROP && token.val.equals(")");
     }
 }

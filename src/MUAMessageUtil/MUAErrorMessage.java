@@ -11,7 +11,7 @@ public class MUAErrorMessage {
         if(splitted.length >= 2) {
             msg = msg + splitted[1];
         }
-        System.err.println(String.format("%1$-27s", "[" + where.getResourceVal() + " ERROR]") + msg);
+        System.err.println(String.format("%1$-35s", "[" + where.getResourceVal() + " ERROR]") + msg);
     }
     public static void warn(ErrorStringResource where, ErrorStringResource what, String why) {
         String[] splitted = what.getResourceVal().split(splitter);
@@ -22,6 +22,6 @@ public class MUAErrorMessage {
         if(splitted.length >= 2) {
             msg = msg + splitted[1];
         }
-        System.err.println(String.format("%1$-27s", "[" + where.getResourceVal() + " WARNING]") + msg);
+        System.err.println(String.format("%1$-35s", "[" + where.getResourceVal() + " WARNING]") + msg);
     }
 }
