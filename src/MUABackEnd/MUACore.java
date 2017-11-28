@@ -46,6 +46,7 @@ public class MUACore {
         registerBuiltInOperation(MUAchslash.class, global);
         registerBuiltInOperation(MUAchspace.class, global);
         registerBuiltInOperation(MUAchtab.class, global);
+        registerBuiltInOperation(MUAclearglobal.class, global);
         registerBuiltInOperation(MUAdeclare.class, global);
         registerBuiltInOperation(MUAdiv.class, global);
         registerBuiltInOperation(MUAeq.class, global);
