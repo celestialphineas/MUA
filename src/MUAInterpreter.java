@@ -74,15 +74,10 @@ public class MUAInterpreter {
         if(flagInteractiveMode) while (true) {
             try {
                 if (flagShowPrompt)
-                    MUAIO.getInstance().out.print(String.format("%1$-15s", "[In" + inCount + "] := "));
+                    MUAIO.getInstance().out.print(String.format("%1$-10s", "[In" + inCount + "]\t:= "));
                 inCount++;
-                boolean flagFirst = true;
                 StringBuilder inputBuffer = new StringBuilder();
                 while (scanner.hasNext()) {
-                    if (!flagFirst)
-                        if (flagShowPrompt)
-                            MUAIO.getInstance().out.print("> ");
-                    flagFirst = false;
                     String string = scanner.nextLine();
                     inputBuffer.append(string);
                     if(isCompleteInput(inputBuffer.toString())) {
@@ -109,7 +104,7 @@ public class MUAInterpreter {
                         if (flagExpressionOut) for (MUAObject obj : result) {
                             if (flagShowPrompt)
                                 MUAIO.getInstance().out
-                                        .print(String.format("%1$-15s", "[Out" + outCount + "] := "));
+                                        .print(String.format("%1$-10s", "[Out" + outCount + "]\t:= "));
                             outCount++;
                             MUAIO.getInstance().out.println(obj);
                         }
