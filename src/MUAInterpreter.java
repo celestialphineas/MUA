@@ -20,7 +20,7 @@ public class MUAInterpreter {
         boolean flagExpressionOut = false;
         boolean flagLispForm = false;
         boolean flagSilent = false;
-        boolean flagShowPrompt = false;
+        boolean flagShowPrompt = true;
         boolean flagPrintTokens = false;
         boolean flagStacktrace = false;
         FileReader scriptFile = null;
@@ -32,19 +32,19 @@ public class MUAInterpreter {
                 System.out.println("usage: java MakeUpInterpreter [options] [filename]");
                 System.out.println("Run in interactive mode by default.");
                 System.out.println("Options:");
-                System.out.println("\t--help  : Show this help message.");
-                System.out.println("\t--out   : Output the value of the expressions.");
-                System.out.println("\t--lisp  : Output the expressions in LISP form.");
-                System.out.println("\t--silent: Hide all warnings and errors.");
-                System.out.println("\t--prompt: Show prompt.");
-                System.out.println("\t--tokens: Print tokens.");
-                System.out.println("\t--trace : Print stack trace.");
+                System.out.println("\t--help    : Show this help message.");
+                System.out.println("\t--out     : Output the value of the expressions.");
+                System.out.println("\t--lisp    : Output the expressions in LISP form.");
+                System.out.println("\t--silent  : Hide all warnings and errors.");
+                System.out.println("\t--noprompt: Hide prompt.");
+                System.out.println("\t--tokens  : Print tokens.");
+                System.out.println("\t--trace   : Print stack trace.");
                 System.exit(0);
             }
             else if(args[i].equals("--out"))    { flagExpressionOut = true; }
             else if(args[i].equals("--lisp"))   { flagLispForm = true; }
             else if(args[i].equals("--silent")) { flagSilent = true; }
-            else if(args[i].equals("--prompt")) { flagShowPrompt = true; }
+            else if(args[i].equals("--prompt")) { flagShowPrompt = false; }
             else if(args[i].equals("--tokens")) { flagPrintTokens = true; }
             else if(args[i].equals("--trace"))  { flagStacktrace = true; }
             else {
@@ -64,8 +64,8 @@ public class MUAInterpreter {
 
         int inCount = 0, outCount = 0;
         LexicalAnalyzer lexicalAnalyzer = new LexicalAnalyzer();
-        Scanner scanner = MUAIO.getInstance().in;
         List<Token> tokenList = null;
+        Scanner scanner = MUAIO.getInstance().in;
         MUACore core = MUACore.getInstance();
 
         if(flagLispForm)    ExprListObject.setLispForm();
