@@ -104,7 +104,7 @@ public class MUAInterpreter {
                         if (flagExpressionOut) for (MUAObject obj : result) {
                             if (flagShowPrompt)
                                 MUAIO.getInstance().out
-                                        .print(String.format("%1$-10s", "[Out" + outCount + "]\t:= "));
+                                        .print(String.format("%1$-11s", "[Out" + outCount + "]\t:= "));
                             outCount++;
                             MUAIO.getInstance().out.println(obj);
                         }
