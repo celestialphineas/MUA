@@ -77,14 +77,16 @@ public class MUAInterpreter {
                     MUAIO.getInstance().out.print(String.format("%1$-15s", "[In" + inCount + "] := "));
                 inCount++;
                 boolean flagFirst = true;
+                StringBuilder inputBuffer = new StringBuilder();
                 while (scanner.hasNext()) {
                     if (!flagFirst)
                         if (flagShowPrompt)
                             MUAIO.getInstance().out.print("> ");
                     flagFirst = false;
                     String string = scanner.nextLine();
-                    lexicalAnalyzer.sendLine(string);
-                    if (lexicalAnalyzer.isCompleteLine()) {
+                    inputBuffer.append(string);
+                    if(isCompleteInput(inputBuffer.toString())) {
+                        lexicalAnalyzer.sendLine(inputBuffer.toString());
                         tokenList = lexicalAnalyzer.getTokenList();
                         lexicalAnalyzer.cleanUp();
                         break;
@@ -142,5 +144,16 @@ public class MUAInterpreter {
                 }
             }
         }
+    }
+    private static boolean isCompleteInput(String input) {
+        int parenCount = 0, bracketCount = 0;
+        for(int i = 0; i < input.length(); i++) {
+            if(input.charAt(i) == '(') parenCount++;
+            if(input.charAt(i) == ')') parenCount--;
+            if(input.charAt(i) == '[') bracketCount++;
+            if(input.charAt(i) == ']') bracketCount--;
+        }
+        if(parenCount <= 0 && bracketCount <= 0) return true;
+        return false;
     }
 }

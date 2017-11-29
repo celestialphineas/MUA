@@ -7,6 +7,8 @@ import MUAMessageUtil.ErrorStringResource;
 import MUAMessageUtil.MUAErrorMessage;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 // The lexical analyzer is a state machine
 public class LexicalAnalyzer {
@@ -102,6 +104,21 @@ public class LexicalAnalyzer {
     // Like, declare before definition
     private static String preprocess(String input) {
         if(input == null) return null;
+        Pattern pattern = Pattern.compile("(.*?)\\s*make\\s*\"(.*?)\\s*\\[\\s*\\[(.*?)\\](.*)");
+        Matcher matcher = pattern.matcher(input);
+        if(matcher.find()) {
+            String[] makeArgs = matcher.group(3).split(" ");
+            for(int i = 0; i < makeArgs.length; i++)
+                if(makeArgs[i].charAt(0) != '\"')
+                    makeArgs[i] = "\"" + makeArgs[i];
+            StringBuilder thirdPart = new StringBuilder();
+            for(String arg : makeArgs) {
+                thirdPart.append(arg + " ");
+            }
+            input
+                = matcher.group(1) + " make \"" + matcher.group(2)
+                    + " [[ " + thirdPart + " ] " + matcher.group(4);
+        }
         return input.replaceAll("make\\s*\"(.*?)\\s*\\[\\s*\\[(.*?)\\]",
                 "declare \"$1 [$2] make \"$1 [[$2]");
     }
