@@ -1,5 +1,20 @@
 # MUA: Make-Up lAnguage
 
+```
+MUA (MakeUp lAnguage) Interpreter
+Celestial Phineas (Yehang YIN) @ ZJU
+usage: java MakeUpInterpreter [options] [filename]
+Run in interactive mode by default.
+Options:
+        --help  : Show this help message.
+        --out   : Output the value of the expressions.
+        --lisp  : Output the expressions in LISP form.
+        --silent: Hide all warnings and errors.
+        --prompt: Show prompt.
+        --tokens: Print tokens.
+        --trace : Print stack trace.
+```
+
 MUA is a made-up programming language introduced in Weng Kai's *Principles of Programming Language* course. The `master` branch of this repo is an interpreter of MUA with a few modifications to the original definition. For the interpreter that allows the original definition to work, please check out the `homework` branch.
 
 MUA is in some ways alike LOGO. And I added a bit stuff inspired by Mathematica.
