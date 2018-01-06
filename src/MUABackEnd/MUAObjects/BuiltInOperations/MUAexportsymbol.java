@@ -4,9 +4,9 @@ import MUABackEnd.MUAObjects.*;
 import MUAMessageUtil.ErrorStringResource;
 import MUAMessageUtil.MUAErrorMessage;
 
-public class MUAexport extends BuiltInOperation {
-    public MUAexport() {
-        name = "export";
+public class MUAexportsymbol extends BuiltInOperation {
+    public MUAexportsymbol() {
+        name = "exportsymbol";
         argc = 1;
     }
     @Override

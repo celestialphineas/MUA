@@ -5,7 +5,7 @@ import MUABackEnd.MUAObjects.*;
 public class MUAlist extends BuiltInOperation {
     public MUAlist() {
         name = "list";
-        argc = -1;      // Any
+        argc = 2;      // Any
     }
     @Override
     public MUAObject getResult(ExprListObject expr_)

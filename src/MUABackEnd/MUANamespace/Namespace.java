@@ -22,6 +22,9 @@ public class Namespace implements MUAObject {
         return result;
     }
     protected Namespace() {}
+    public Map<String, MUAObject> getMap() {
+        return hashMap;
+    }
 
     public void setName(String name_)           { name = name_; }
     public String getName()                     { return name; }

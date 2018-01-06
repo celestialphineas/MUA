@@ -6,7 +6,7 @@ import MUAMessageUtil.MUAErrorMessage;
 
 public class MUAexportnamespace extends BuiltInOperation {
     public MUAexportnamespace() {
-        name = "namespace";
+        name = "exportnamespace";
         argc = 1;
     }
     @Override

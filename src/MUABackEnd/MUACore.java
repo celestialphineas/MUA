@@ -34,55 +34,116 @@ public class MUACore {
     public static void loadCoreOperations() {
         Namespace global = GlobalNamespace.getInstance();
         // Add built-in functions
-        registerBuiltInOperation(MUAadd.class, global);
-        registerBuiltInOperation(MUAand.class, global);
-        registerBuiltInOperation(MUAchaster.class, global);
-        registerBuiltInOperation(MUAchendl.class, global);
-        registerBuiltInOperation(MUAchlbrac.class, global);
-        registerBuiltInOperation(MUAchlparenth.class, global);
-        registerBuiltInOperation(MUAchminus.class, global);
-        registerBuiltInOperation(MUAchplus.class, global);
-        registerBuiltInOperation(MUAchrbrac.class, global);
-        registerBuiltInOperation(MUAchslash.class, global);
-        registerBuiltInOperation(MUAchspace.class, global);
-        registerBuiltInOperation(MUAchtab.class, global);
-        registerBuiltInOperation(MUAclearglobal.class, global);
-        registerBuiltInOperation(MUAdeclare.class, global);
-        registerBuiltInOperation(MUAdiv.class, global);
-        registerBuiltInOperation(MUAeq.class, global);
-        registerBuiltInOperation(MUAerase.class, global);
-        registerBuiltInOperation(MUAexit.class, global);
-        registerBuiltInOperation(MUAexport.class,global);
-        registerBuiltInOperation(MUAexportnamespace.class, global);
-        registerBuiltInOperation(MUAexpose.class, global);
-        registerBuiltInOperation(MUAexposenamespace.class, global);
-        registerBuiltInOperation(MUAeval.class, global);
-        registerBuiltInOperation(MUAfalse.class, global);
-        registerBuiltInOperation(MUAgt.class, global);
-        registerBuiltInOperation(MUAhold.class, global);
-        registerBuiltInOperation(MUAiff.class, global);
-        registerBuiltInOperation(MUAift.class, global);
-        registerBuiltInOperation(MUAisname.class, global);
-        registerBuiltInOperation(MUAlist.class, global);
-        registerBuiltInOperation(MUAlt.class, global);
-        registerBuiltInOperation(MUAmake.class, global);
-        registerBuiltInOperation(MUAmod.class, global);
-        registerBuiltInOperation(MUAmul.class, global);
-        registerBuiltInOperation(MUAnot.class, global);
-        registerBuiltInOperation(MUAor.class, global);
-        registerBuiltInOperation(MUAoutput.class, global);
-        registerBuiltInOperation(MUAprint.class, global);
-        registerBuiltInOperation(MUAread.class, global);
-        registerBuiltInOperation(MUAreadlist.class, global);
-        registerBuiltInOperation(MUAreloadcore.class, global);
-        registerBuiltInOperation(MUArepeat.class, global);
-        registerBuiltInOperation(MUAsetcalldepth.class, global);
-        registerBuiltInOperation(MUAsilence.class, global);
-        registerBuiltInOperation(MUAstop.class, global);
-        registerBuiltInOperation(MUAsub.class, global);
-        registerBuiltInOperation(MUAtest.class, global);
-        registerBuiltInOperation(MUAthing.class, global);
-        registerBuiltInOperation(MUAtrue.class, global);
+        Class[] builtInFunctionClasses = {
+            // Arithmetic operations
+                MUAadd.class, MUAsub.class, MUAmul.class, MUAdiv.class, MUAmod.class,
+            // Logical operations
+                MUAand.class, MUAor.class, MUAnot.class,
+            // Comparators
+                MUAgt.class, MUAeq.class, MUAlt.class,
+            // Boolean values
+                MUAtrue.class, MUAfalse.class,
+            // Character values
+            // These built-in operations take no arguments and return a single MUA word containing exactly the character
+                // chplus +         chminus -       chaster *       chslash /
+                // chlbrac [        chrbrac ]       chlparenth (    chrparenth )
+                // chtab \t         chspace <space> chendl \n
+                MUAchplus.class, MUAchminus.class, MUAchaster.class, MUAchslash.class,
+                MUAchlbrac.class, MUAchrbrac.class, MUAchlparenth.class, MUAchrparenth.class,
+                MUAchtab.class, MUAchspace.class, MUAchendl.class,
+            // List head
+            // Head of the lists, take two arguments by default
+                MUAlist.class,
+            // Name binding and recalling operations
+                // declare [formal_par1, formal_par2, ...]
+                //      Declare a function for later use, and thus MUA can know the prototype of some function and thus
+                //      be able to do the lexical analysis for its parameters. We need this because MUA does
+                //      one-directional scanning. This operation can be useful to do lazy evaluation, nested function
+                //      calls and recursion.
+                // make "name val
+                //      Make, is the operation to bind the value to a name in the local namespace
+                // erase "name
+                //      Erase the name in the local namespace
+                // thing "name      :name
+                //      Operation that returns the value bound to the name
+                MUAdeclare.class, MUAmake.class, MUAerase.class, MUAthing.class,
+            // Evaluation control operations
+                // hold expr
+                //      Hold the expression. Some built-in operations do evaluation to a certain slot in their arg list.
+                //      The hold operation allows the held expression to be evaluated lazily
+                // eval expr
+                //      Evaluate the expression.
+                // silent expr
+                //      Evaluate the expression but return nothing. Null in MUA is defined as nothing.
+                //      In MUA, [ null ] you get []
+                MUAhold.class, MUAeval.class, MUAsilent.class,
+            // Control flow and high order expression replacement
+            // These operations are full of side effects and are the evil side of MUA design.
+            // You can use them to do imperative programming.
+                // test expr
+                //      The test operation implementation in MUA provides a possibility to do imperative programming.
+                //      The test operation causes side effects. It marks its result in the local scope and return
+                //      nothing.
+                // ift expr
+                //      ift, aka "if true", checks if the local scope has tested something. If the test result in local
+                //      scope is true, the operation evaluates its first slot and returns the value of the expression.
+                // iff expr
+                //      iff, "if false" then expr
+                // stop
+                //      Stop the evaluation of current expression, stop returns nothing.
+                // output expr
+                //      Stop the evaluation of current expression, use the expr on the operation's first slot to replace
+                //      the evaluating expression. Amazing, urh?
+                // repeat times expr
+                //      Evaluate the expression for times.
+                MUAtest.class, MUAift.class, MUAiff.class, MUAstop.class, MUAoutput.class, MUArepeat.class,
+            // Namespace control
+                // exportsymbol "name
+                //      Export the local symbol with certain name to its upper level namespace
+                // exportnamespace "name
+                //      Export the namespace with certain name to its upper level namespace and thus make the inner
+                //      namespace accessible to its outer level. The outer level may access its inner level with
+                //      something like ":inner.name"
+                // exportall
+                //      Export all symbols defined in the local namespace to the upper level
+                // exposesymbol "name
+                //      Similar to exportsymbol, except that this expose the symbol to the global namespace
+                // exposenamespace "name
+                //      Similar to exportnamespace, except that this expose the namespace to the global namespace
+                // exposeall
+                //      Expose all symbols defined in the local namespace to the global namespace
+                MUAexportsymbol.class, MUAexportnamespace.class, MUAexportall.class,
+                MUAexposesymbol.class, MUAexposenamespace.class, MUAexposeall.class,
+            // MUA core utils
+                // clearglobal
+                //      Operation that clears all user-defined names in global namespace and load back the default
+                //      definitions of built-in operations
+                // exit
+                //      Exit MUA core
+                // reloadcore
+                //      Reload MUA core, this operation reload the MUA core (i.e. load back the default operation
+                //      definitions) without clearing user-defined names
+                // setcalldepth depth
+                //      This operation set up the maximum depth of call stack, usually 4096 is a good choice, since MUA
+                //      does not implement itself's call stack, rather, MUA use JVM's call stack to make things live.
+                MUAclearglobal.class, MUAexit.class, MUAreloadcore.class, MUAsetcalldepth.class,
+            // Predicates
+                // isname "word
+                //      Returns a boolean indicating if the word is an accessible expression in the current scope
+                // isnumber, isword, islist, isbool, isempty
+                //      These predicates all take one argument, and return a boolean object true or false accordingly.
+                //      The predicates all evaluate its argument, and you will have to use "hold" for some desired
+                //      effects.
+                // isempty
+                //      isempty evaluate the first argument and return a boolean to indicate if the expression is empty
+                //      (with a head only) or the string is empty.
+                MUAisname.class, MUAisnumber.class, MUAisword.class, MUAislist.class, MUAisbool.class, MUAisempty.class,
+            // IO
+                MUAprint.class,  MUAread.class, MUAreadlist.class
+        };
+        for(Class classObj : builtInFunctionClasses) {
+            registerBuiltInOperation(classObj, global);
+        }
     }
 
     private static void registerBuiltInOperation(Class Op, Namespace namespace) {

@@ -54,10 +54,11 @@ public class ExprListObject implements MUAObject {
     }
     // The evalExpr() method
     public void evalExpr() throws MUAStackOverflowException, MUARuntimeException {
-        // TODO
-        ListIterator<MUAObject> firstIterator = objectList.listIterator();
+        // Create a copy of the objectList
+        List<MUAObject> localObjectList = new LinkedList<>(objectList);
+        ListIterator<MUAObject> firstIterator = localObjectList.listIterator();
         firstIterator.next();
-        MUAObject firstElement = objectList.get(0);
+        MUAObject firstElement = localObjectList.get(0);
         if(firstElement instanceof DumbHeadObject) {
             String firstName = ((DumbHeadObject) firstElement).getVal();
             // Bind the first element
@@ -82,7 +83,7 @@ public class ExprListObject implements MUAObject {
             }
         }
 
-        OperationObject operation = (OperationObject) objectList.get(0);
+        OperationObject operation = (OperationObject) localObjectList.get(0);
         if(operation == null) {
             return;
         }

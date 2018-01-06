@@ -5,9 +5,9 @@ import MUABackEnd.MUAObjects.*;
 import MUAMessageUtil.ErrorStringResource;
 import MUAMessageUtil.MUAErrorMessage;
 
-public class MUAexpose extends BuiltInOperation {
-    public MUAexpose() {
-        name = "expose";
+public class MUAexposesymbol extends BuiltInOperation {
+    public MUAexposesymbol() {
+        name = "exposesymbol";
         argc = 1;
     }
     @Override

@@ -2,9 +2,9 @@ package MUABackEnd.MUAObjects.BuiltInOperations;
 
 import MUABackEnd.MUAObjects.*;
 
-public class MUAsilence extends BuiltInOperation {
-    public MUAsilence() {
-        name = "silence";
+public class MUAsilent extends BuiltInOperation {
+    public MUAsilent() {
+        name = "silent";
         argc = 1;
     }
     @Override
