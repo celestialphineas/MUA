@@ -14,6 +14,7 @@ public class MUAift extends BuiltInOperation {
         expr.unsetEvalDone();
         StackTrace.getInstance().pop();
         MUAObject result = expr.objectList.get(1);
+
         // Eval
         if(expr.namespace.isTestTrue()) {
             expr.setEvalDone();

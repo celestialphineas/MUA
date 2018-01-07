@@ -36,12 +36,15 @@ public class MUArepeat extends BuiltInOperation {
         int n = (int)(((NumObject)obj1).getVal() + 0.5);
         MUAObject result = null;
         for(int i = 0; i < n; i++) {
-            ExprListObject runExpr = new ExprListObject();
+            ExprListObject runExpr = new ExprListObject(expr_);
             runExpr.objectList = new LinkedList<>(((ExprListObject) obj2).objectList);
             runExpr.namespace = ((ExprListObject) obj2).namespace;
             runExpr.evalExpr();
             result = runExpr.getReturnVal();
             if(runExpr.isEvalDone()) break;
+            if(expr_.objectList.size() > 2
+                && expr_.objectList.get(2) instanceof ExprListObject
+                && ((ExprListObject)expr_.objectList.get(2)).isEvalDone()) break;
         }
         StackTrace.getInstance().pop();
         return result;

@@ -1,8 +1,12 @@
 package MUABackEnd.MUAObjects;
 
+import MUABackEnd.MUANamespace.GlobalNamespace;
+import MUABackEnd.MUANamespace.Namespace;
 import MUABackEnd.MUAObjects.BuiltInOperations.MUAlist;
 import MUAMessageUtil.ErrorStringResource;
 import MUAMessageUtil.MUAErrorMessage;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class CustomOperation extends OperationObject {
@@ -22,7 +26,9 @@ public class CustomOperation extends OperationObject {
         argc = ((ExprListObject)(list.objectList.get(1))).objectList.size() - 1;
         try {
             argDeclaration = new ExprListObject((ExprListObject)(list.objectList.get(1)));
-            localEnvList = (ExprListObject)(list.objectList.get(2));
+            localEnvList = new ExprListObject();
+            localEnvList.objectList = new ArrayList<>(((ExprListObject)(list.objectList.get(2))).objectList);
+//            localEnvList = new (ExprListObject)(list.objectList.get(2));
         } catch (Exception e) {
             MUAErrorMessage.error(ErrorStringResource.mua_custom_operation,
                     ErrorStringResource.operationization_internal, "Mysterious force");
@@ -36,6 +42,7 @@ public class CustomOperation extends OperationObject {
     public MUAObject getResult(ExprListObject expr)
     throws MUAStackOverflowException, MUARuntimeException {
         StackTrace.getInstance().push(name);
+        localEnvList.allocateNamespace(expr.namespace.getParent());
         // Passing parameters
         // Set the variable in the namespace according to the first sublist
         for(int i = 1; i <= argc; i++) {
@@ -49,8 +56,8 @@ public class CustomOperation extends OperationObject {
             }
             localEnvList.namespace.set(word.getVal(), obj);
             // Test use: 
-            // System.out.println("Env list namespace: " + localEnvList.namespace.getName());
-            // System.out.println("Env list namespace: " + word.getVal() + ", " + localEnvList.namespace.find(word.getVal()));
+//             System.out.println("Env list namespace: " + localEnvList.namespace.getName());
+//             System.out.println("Env list namespace: " + word.getVal() + ", " + localEnvList.namespace.find(word.getVal()));
         }
         // Get result
         localEnvList.evalExpr();

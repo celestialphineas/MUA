@@ -23,14 +23,14 @@ public class MUAwait extends BuiltInOperation {
             try {
                 Thread.currentThread().sleep((long)millis);
             } catch (Exception e) {
-                MUAErrorMessage.error(ErrorStringResource.operation_sin,
+                MUAErrorMessage.error(ErrorStringResource.operation_wait,
                         ErrorStringResource.unknow_internal_error, e.getMessage());
             }
             return null;
         }
         String type1 = "null";
         if(obj1 != null) type1 = obj1.typeName();
-        MUAErrorMessage.error(ErrorStringResource.operation_sin,
+        MUAErrorMessage.error(ErrorStringResource.operation_wait,
                 ErrorStringResource.incompatible_type,
                 type1);
         StackTrace.getInstance().pop();

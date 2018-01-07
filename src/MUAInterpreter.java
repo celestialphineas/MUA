@@ -21,8 +21,8 @@ public class MUAInterpreter {
         boolean flagLispForm = false;
         boolean flagSilent = false;
         boolean flagShowPrompt = true;
-        boolean flagPrintTokens = false;
-        boolean flagStacktrace = false;
+        boolean flagPrintTokens = true;
+        boolean flagStacktrace = true;
         FileReader scriptFile = null;
 
         for(int i = 0; i < args.length; i++) {
@@ -112,6 +112,7 @@ public class MUAInterpreter {
             } catch (Exception e) {
                 MUAErrorMessage.error(ErrorStringResource.mua_main,
                         ErrorStringResource.unknow_internal_error, e.toString());
+                e.printStackTrace();
             }
         }
         // File

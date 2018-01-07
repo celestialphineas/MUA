@@ -50,6 +50,11 @@ public class ExprListObject implements MUAObject {
     public Namespace allocateNamespace(Namespace parent) {
         namespace = new Namespace("localNamespace" + namespaceSerial, parent);
         namespaceSerial++;
+        for(MUAObject obj : objectList) {
+            if(obj instanceof ExprListObject) {
+                ((ExprListObject) obj).namespace.setParent(namespace);
+            }
+        }
         return namespace;
     }
     // The evalExpr() method
@@ -109,6 +114,7 @@ public class ExprListObject implements MUAObject {
             return buffer.toString();
         } else {
             for(MUAObject object : objectList) {
+                if(object == null) continue;
                 if(object.toString().equals("list")) {
                     isList = true;
                     buffer.append("[ ");

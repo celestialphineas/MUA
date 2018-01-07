@@ -34,6 +34,8 @@ public class LexicalAnalyzer {
                 // Clear the string buffer
                 stringBuffer.delete(0, stringBuffer.length());
             }
+        } else if(readingComment) {
+            // Do nothing
         } else if(isBreakableSymbol(ch)) {
             boolean minusBreak = true;
             if(stringBuffer.length() > 0 && !readingComment) {
@@ -51,7 +53,7 @@ public class LexicalAnalyzer {
                 slashCount = 0;
             }
             if(slashCount == 2) {
-                stringList.removeLast();
+                if(stringList.size() > 0) stringList.removeLast();
                 readingComment = true;
                 slashCount = 0;
             } else {

@@ -1,5 +1,6 @@
 package MUABackEnd.MUAObjects.BuiltInOperations;
 
+import MUABackEnd.MUANamespace.Namespace;
 import MUABackEnd.MUAObjects.*;
 
 public class MUAlist extends BuiltInOperation {
@@ -30,9 +31,8 @@ public class MUAlist extends BuiltInOperation {
                 if(((ExprListObject) obj).isEvalDone()) {
                     if(returnVal != null) return returnVal;
                     else {
-                        if(returnVal != null) result.objectList.add(returnVal);
                         StackTrace.getInstance().pop();
-                        return result;
+                        return null;
                     }
                 }
                 if(returnVal == null) continue;

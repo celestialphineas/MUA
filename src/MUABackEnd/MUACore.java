@@ -73,7 +73,7 @@ public class MUACore {
             // Head of the lists, take two arguments by default
                 MUAlist.class,
             // List operations to do functional programming
-                MUAflatten1level.class,
+                MUAflatten1level.class, MUAapply.class, MUAmap.class, MUApart.class, MUAlength.class,
             // Name binding and recalling operations
                 // declare [formal_par1, formal_par2, ...]
                 //      Declare a function for later use, and thus MUA can know the prototype of some function and thus
@@ -116,7 +116,10 @@ public class MUACore {
                 //      the evaluating expression. Amazing, urh?
                 // repeat times expr
                 //      Evaluate the expression for times.
+                // if booleantest trueval falseval
+                //      Functional if
                 MUAtest.class, MUAift.class, MUAiff.class, MUAstop.class, MUAoutput.class, MUArepeat.class,
+                MUAif.class,
             // Namespace control
                 // exportsymbol "name
                 //      Export the local symbol with certain name to its upper level namespace
@@ -136,7 +139,7 @@ public class MUACore {
                 //      Clear all definitions in the local scope
                 MUAexportsymbol.class, MUAexportnamespace.class, MUAexportall.class,
                 MUAexposesymbol.class, MUAexposenamespace.class, MUAexposeall.class,
-                MUAclearlocal.class, MUAnamespacelist.class,
+                MUAclearlocal.class, MUAnamespacelist.class, MUApparentnamespacelist.class,
             // MUA core utils
                 // clearglobal
                 //      Operation that clears all user-defined names in global namespace and load back the default
@@ -163,7 +166,7 @@ public class MUACore {
                 MUAisname.class, MUAisnumber.class, MUAisword.class, MUAislist.class, MUAisbool.class, MUAisempty.class,
             // IO and system
                 MUAprint.class, MUAprintinteger.class, MUAread.class, MUAreadlist.class,
-                MUAwait.class, MUAsave.class, MUAload.class
+                MUAwait.class, MUAsave.class, MUAload.class, MUAunicode.class, MUAfromunicode.class
         };
         for(Class classObj : builtInFunctionClasses) {
             registerBuiltInOperation(classObj, global);

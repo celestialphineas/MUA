@@ -1,1 +1,47 @@
-//loadmodule "originaldesign
+//-------- Numberical --------
+// "abs" returns the absolute value of the argument
+make "abs [["number] [
+    test (gt :number 0)
+        ift :number
+        iff (-:number)
+]]
+
+// "random" is a curried version of intervalrandom
+make "random [["number] [output intervalrandom 0 :number]]
+
+// "int" is an alias of floor
+make "int :floor
+
+// "round"
+make "round [["number] [output floor(:number + 0.5)]]
+
+//-------- Word and list operations --------
+// "word" is an alias of add,
+// since in this implementation, grammar sugar for catenate strings with "+" is provided
+make "word :add
+
+// Functional "if" implementation
+// Note that using operations with side effects may cause undefined behavior
+//make "if [["test1 "list1 "list2] [
+//    test :test1
+//        ift :list1
+//        iff :list2
+//]]
+
+// List and string operations
+make "sentence [["list1 "list2] [output flatten1level list :list1 :list2]]
+make "join [["list1 "list2] [output flatten1level list :list1 [:list2]]]
+make "first [["object] [output part 1 :object]]
+make "last [["object] [output part (length :object) :object]]
+make "butfirst [["object] [output part [2 (length :object)] :object]]
+make "butlast [["object] [output part [1 ((length :object) - 1)] :object]]
+
+// constant pi
+make "pi 3.14159265358979
+// "run" is an alias of eval
+make "run :eval
+
+// "erall" is an alias of clearlocal
+make "erall :clearlocal
+// "poall"
+make "poall [[] [output print pparentnamespacelist]]

@@ -3,6 +3,7 @@ package MUABackEnd.MUAObjects.BuiltInOperations;
 import MUABackEnd.MUAObjects.*;
 import MUAMessageUtil.ErrorStringResource;
 import MUAMessageUtil.MUAErrorMessage;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 
 public class MUAand extends BuiltInOperation {
     public MUAand() {
@@ -15,10 +16,17 @@ public class MUAand extends BuiltInOperation {
         StackTrace.getInstance().push(name);
         MUAObject obj1 = expr_.objectList.get(1);
         MUAObject obj2 = expr_.objectList.get(2);
+        // Eval 1
         if(obj1 instanceof ExprListObject) {
             ((ExprListObject)obj1).evalExpr();
             obj1 = ((ExprListObject)obj1).getReturnVal();
         }
+        // Short circuit
+        if(obj1 instanceof BooleanObject && ((BooleanObject) obj1).getVal() == false) {
+            StackTrace.getInstance().pop();
+            return new BooleanObject(false);
+        }
+        // Eval 2
         if(obj2 instanceof ExprListObject) {
             ((ExprListObject)obj2).evalExpr();
             obj2 = ((ExprListObject)obj2).getReturnVal();
