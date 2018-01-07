@@ -102,7 +102,7 @@ public class LexicalAnalyzer {
     // Like, declare before definition
     private static String preprocess(String input) {
         if(input == null) return null;
-        return input.replaceAll("make\\s*\"(.*?)\\s*\\[\\s*\\[(.*?)\\]",
+        return input.replaceAll("make\\s*\"(\\S*?)\\s*\\[\\s*\\[(.*?)\\]",
                 "declare \"$1 [$2] make \"$1 [[$2]");
     }
     public void sendStringBuffer(StringBuilder buffer) {

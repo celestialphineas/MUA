@@ -14,8 +14,9 @@ public class MUAeval extends BuiltInOperation {
         MUAObject result = expr.objectList.get(1);
         // Eval
         if(result instanceof ExprListObject) {
-            // Eval one more time for operation "thing"
-            if(((ExprListObject) result).objectList.get(0).toString().equals("thing")) {
+//            if(((ExprListObject) result).objectList.get(0).toString().equals("thing")) {
+            // Eval twice
+            if(result instanceof ExprListObject) {
                 ((ExprListObject) result).evalExpr();
                 result = ((ExprListObject) result).getReturnVal();
             }

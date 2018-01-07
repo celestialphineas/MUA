@@ -9,10 +9,8 @@ public class NumObject implements MUAObject {
         val = Double.parseDouble(val_);
     }
     public double getVal() { return val; }
-    @Override
-    public boolean isAtomic() { return true; }
-    @Override
-    public String toString() { return Double.toString(val); }
-    @Override
-    public String typeName() { return "number"; }
+    @Override public boolean isAtomic() { return true; }
+    @Override public String toString() { return Double.toString(val); }
+    @Override public String typeName() { return "number"; }
+    @Override public String toMUAExprString() { return toString(); }
 }

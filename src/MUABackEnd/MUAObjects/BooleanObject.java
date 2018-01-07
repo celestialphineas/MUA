@@ -11,4 +11,5 @@ public class BooleanObject implements MUAObject{
     @Override public boolean isAtomic() { return true; }
     @Override public String typeName()  { return "boolean"; }
     @Override public String toString()  { return val ? "true" : "false"; }
+    @Override public String toMUAExprString() { return toString(); }
 }

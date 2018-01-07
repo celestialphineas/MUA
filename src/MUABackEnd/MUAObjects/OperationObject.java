@@ -13,9 +13,8 @@ public abstract class OperationObject implements MUAObject {
         StackTrace.getInstance().pop();
         return null;
     }
-    @Override
-    public boolean isAtomic()  { return false; }
-    @Override
-    public String typeName()   { return "operation"; }
+    @Override public boolean isAtomic()  { return false; }
+    @Override public String typeName()   { return "operation"; }
+    @Override public String toMUAExprString() { return name; }
 }
 

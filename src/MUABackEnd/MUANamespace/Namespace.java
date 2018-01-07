@@ -1,6 +1,6 @@
 package MUABackEnd.MUANamespace;
 
-import MUABackEnd.MUAObjects.MUAObject;
+import MUABackEnd.MUAObjects.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,41 +13,57 @@ public class Namespace implements MUAObject {
     private int testReturnVal = -1;
 
     public Namespace(String name_, Namespace parent_) {
-        name = name_; parent = parent_;
+        name = name_;
+        parent = parent_;
         hashMap = new HashMap<>();
     }
+
     public Namespace clone(String name_) {
         Namespace result = new Namespace(name_, parent);
         result.hashMap = new HashMap<>(this.hashMap);
         return result;
     }
-    protected Namespace() {}
+
+    protected Namespace() {
+    }
+
     public Map<String, MUAObject> getMap() {
         return hashMap;
     }
 
-    public void setName(String name_)           { name = name_; }
-    public String getName()                     { return name; }
-    public void setParent(Namespace parent_)    { parent = parent_; }
-    public Namespace getParent()                { return parent; }
+    public void setName(String name_) {
+        name = name_;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setParent(Namespace parent_) {
+        parent = parent_;
+    }
+
+    public Namespace getParent() {
+        return parent;
+    }
 
     public MUAObject find(String key) {
         MUAObject found = hashMap.get(key);
-        if(found == null) {
+        if (found == null) {
             String[] splitted = key.split("\\.");
-            if(splitted.length < 2) {
+            if (splitted.length < 2) {
                 return parent.find(key);
             }
             // Find the namespace
             MUAObject foundNamespace = GlobalNamespace.getInstance();
-            for(int i = 0; i < splitted.length - 1; i++) {
-                foundNamespace = ((Namespace)foundNamespace).hashMap.get(splitted[i]);
-                if(foundNamespace == null || !(foundNamespace instanceof Namespace)) {
+            for (int i = 0; i < splitted.length - 1; i++) {
+                foundNamespace = ((Namespace) foundNamespace).hashMap.get(splitted[i]);
+                if (foundNamespace == null || !(foundNamespace instanceof Namespace)) {
                     return GlobalNamespace.getInstance().find(key);
                 }
             }
-            found = ((Namespace)foundNamespace).hashMap.get(splitted[splitted.length - 1]);
-            if(found == null) {
+            found = ((Namespace) foundNamespace).hashMap.get(splitted[splitted.length - 1]);
+            if (found == null) {
                 return GlobalNamespace.getInstance().find(key);
             }
         }
@@ -55,13 +71,13 @@ public class Namespace implements MUAObject {
     }
 
     public void set(String key, MUAObject val) {
-        if(key != null && val != null) {
+        if (key != null && val != null) {
             hashMap.put(key, val);
         }
     }
 
     public void unset(String key) {
-        if(key != null) {
+        if (key != null) {
             hashMap.remove(key);
         }
     }
@@ -73,14 +89,56 @@ public class Namespace implements MUAObject {
     }
 
     // Set the testReturnVal flag
-    public void setTest()           { testReturnVal = 1; }
-    public void unsetTest()         { testReturnVal = 0; }
-    public void clearTest()         { testReturnVal = -1; }
-    public boolean isTestTrue()     { return testReturnVal == 1; }
-    public boolean isTestFalse()    { return testReturnVal == 0; }
+    public void setTest() {
+        testReturnVal = 1;
+    }
+
+    public void unsetTest() {
+        testReturnVal = 0;
+    }
+
+    public void clearTest() {
+        testReturnVal = -1;
+    }
+
+    public boolean isTestTrue() {
+        return testReturnVal == 1;
+    }
+
+    public boolean isTestFalse() {
+        return testReturnVal == 0;
+    }
 
     @Override
-    public boolean isAtomic()   { return false; }
+    public boolean isAtomic() {
+        return false;
+    }
+
     @Override
-    public String typeName()    { return "namespace"; }
+    public String typeName() {
+        return "namespace";
+    }
+
+    @Override
+    public String toMUAExprString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (Map.Entry<String, MUAObject> entry : hashMap.entrySet()) {
+            if (entry.getValue() instanceof Namespace) {
+                stringBuilder.append("[ exportnamespace \"" + entry.getKey() + "\n");
+                stringBuilder.append(entry.getValue().toMUAExprString());
+                stringBuilder.append("]\n");
+            } else if (!(entry.getValue() instanceof OperationObject)) {
+                stringBuilder.append("make \"" + entry.getKey());
+                if(entry.getValue() instanceof ExprListObject) {
+                    if(!CustomOperation.isOperationizable((ExprListObject)entry.getValue())) {
+                        stringBuilder.append(" hold ");
+                    } else stringBuilder.append(" ");
+                } else {
+                    stringBuilder.append(" hold ");
+                }
+                stringBuilder.append(entry.getValue().toMUAExprString() + "\n");
+            }
+        }
+        return stringBuilder.toString();
+    }
 }

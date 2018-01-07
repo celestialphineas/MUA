@@ -4,9 +4,9 @@ import MUABackEnd.MUAObjects.*;
 import MUAMessageUtil.ErrorStringResource;
 import MUAMessageUtil.MUAErrorMessage;
 
-public class MUAmod extends BuiltInOperation {
-    public MUAmod() {
-        name = "mod";
+public class MUAintervalrandom extends BuiltInOperation {
+    public MUAintervalrandom() {
+        name = "intervalrandom";
         argc = 2;
     }
     @Override
@@ -24,15 +24,16 @@ public class MUAmod extends BuiltInOperation {
             obj2 = ((ExprListObject)obj2).getReturnVal();
         }
         if(obj1 instanceof NumObject && obj2 instanceof NumObject) {
-            double result
-                = (int)(((NumObject)obj1).getVal() + 0.5) %
-                    (int)(((NumObject)obj2).getVal() + 0.5);
+            double val1 = ((NumObject)obj1).getVal();
+            double val2 = ((NumObject)obj2).getVal();
+            double result = Math.random() * (val2 - val1) + val1;
+
             return new NumObject(result);
         }
         String type1 = "unknown", type2 = "unknown";
         if(obj1 != null) type1 = obj1.typeName();
         if(obj2 != null) type2 = obj2.typeName();
-        MUAErrorMessage.error(ErrorStringResource.operation_mod,
+        MUAErrorMessage.error(ErrorStringResource.operation_intervalrandom,
                 ErrorStringResource.incompatible_type,
                 type1 + ", " + type2);
         StackTrace.getInstance().pop();

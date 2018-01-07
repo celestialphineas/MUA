@@ -121,4 +121,20 @@ public class ExprListObject implements MUAObject {
         }
         return buffer.toString();
     }
+    @Override
+    public String toMUAExprString() {
+        StringBuilder buffer = new StringBuilder();
+        boolean isList = false;
+        for(MUAObject object : objectList) {
+            if(object.toString().equals("list")) {
+                isList = true;
+                buffer.append("[ ");
+                continue;
+            }
+            buffer.append(object.toMUAExprString());
+            buffer.append(' ');
+        }
+        if(isList) buffer.append("]");
+        return buffer.toString();
+    }
 }

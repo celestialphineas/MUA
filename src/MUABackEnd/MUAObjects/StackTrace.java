@@ -19,7 +19,7 @@ public class StackTrace {
         callStack.push(str);
     }
     public void pop()   { callStack.pop(); }
-    public void clear() { callStack.clear(); }
+    public void clear() { if(!callStack.isEmpty()) callStack.clear(); }
     @Override
     public String toString() {
         StringBuilder buffer = new StringBuilder();

@@ -4,6 +4,7 @@ import MUABackEnd.MUANamespace.GlobalNamespace;
 import MUABackEnd.MUANamespace.Namespace;
 import MUABackEnd.MUAObjects.*;
 import MUABackEnd.MUAObjects.BuiltInOperations.*;
+import MUAFrontEnd.LexicalAnalyzer;
 import MUAFrontEnd.Token;
 import MUAIO.MUAIO;
 import MUAMessageUtil.ErrorStringResource;
@@ -11,6 +12,7 @@ import MUAMessageUtil.MUAErrorMessage;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Scanner;
 
 // The MUA core
 public class MUACore {
@@ -26,7 +28,21 @@ public class MUACore {
         global.clear();
         // Load core operations
         loadCoreOperations();
+        // Load startup script
+        loadStartupScript();
     }
+
+    private void loadStartupScript() {
+        String data
+                = new Scanner(getClass().getClassLoader()
+                .getResourceAsStream("startup.mua"), "UTF-8")
+                .useDelimiter("\\A").next();
+        LexicalAnalyzer internalLexicalAnalyzer = new LexicalAnalyzer();
+        internalLexicalAnalyzer.sendLine(data);
+        MUACore.evaluate(internalLexicalAnalyzer.getTokenList(), GlobalNamespace.getInstance());
+        internalLexicalAnalyzer.cleanUp();
+    }
+
     public static void exit() {
         System.exit(0);
     }
@@ -35,8 +51,10 @@ public class MUACore {
         Namespace global = GlobalNamespace.getInstance();
         // Add built-in functions
         Class[] builtInFunctionClasses = {
-            // Arithmetic operations
+            // Arithmetic and numerical operations
                 MUAadd.class, MUAsub.class, MUAmul.class, MUAdiv.class, MUAmod.class,
+                MUAintervalrandom.class, MUAfloor.class,
+                MUAsqrt.class, MUAsin.class,
             // Logical operations
                 MUAand.class, MUAor.class, MUAnot.class,
             // Comparators
@@ -54,6 +72,8 @@ public class MUACore {
             // List head
             // Head of the lists, take two arguments by default
                 MUAlist.class,
+            // List operations to do functional programming
+                MUAflatten1level.class,
             // Name binding and recalling operations
                 // declare [formal_par1, formal_par2, ...]
                 //      Declare a function for later use, and thus MUA can know the prototype of some function and thus
@@ -72,7 +92,7 @@ public class MUACore {
                 //      Hold the expression. Some built-in operations do evaluation to a certain slot in their arg list.
                 //      The hold operation allows the held expression to be evaluated lazily
                 // eval expr
-                //      Evaluate the expression.
+                //      Evaluate the expression. (Forced eval twice)
                 // silent expr
                 //      Evaluate the expression but return nothing. Null in MUA is defined as nothing.
                 //      In MUA, [ null ] you get []
@@ -112,8 +132,11 @@ public class MUACore {
                 //      Similar to exportnamespace, except that this expose the namespace to the global namespace
                 // exposeall
                 //      Expose all symbols defined in the local namespace to the global namespace
+                // clearlocal
+                //      Clear all definitions in the local scope
                 MUAexportsymbol.class, MUAexportnamespace.class, MUAexportall.class,
                 MUAexposesymbol.class, MUAexposenamespace.class, MUAexposeall.class,
+                MUAclearlocal.class, MUAnamespacelist.class,
             // MUA core utils
                 // clearglobal
                 //      Operation that clears all user-defined names in global namespace and load back the default
@@ -126,7 +149,7 @@ public class MUACore {
                 // setcalldepth depth
                 //      This operation set up the maximum depth of call stack, usually 4096 is a good choice, since MUA
                 //      does not implement itself's call stack, rather, MUA use JVM's call stack to make things live.
-                MUAclearglobal.class, MUAexit.class, MUAreloadcore.class, MUAsetcalldepth.class,
+                MUAclearglobal.class, MUAexit.class, MUAreloadcore.class, MUAsetcalldepth.class, MUAloadmodule.class,
             // Predicates
                 // isname "word
                 //      Returns a boolean indicating if the word is an accessible expression in the current scope
@@ -138,8 +161,9 @@ public class MUACore {
                 //      isempty evaluate the first argument and return a boolean to indicate if the expression is empty
                 //      (with a head only) or the string is empty.
                 MUAisname.class, MUAisnumber.class, MUAisword.class, MUAislist.class, MUAisbool.class, MUAisempty.class,
-            // IO
-                MUAprint.class,  MUAread.class, MUAreadlist.class
+            // IO and system
+                MUAprint.class, MUAprintinteger.class, MUAread.class, MUAreadlist.class,
+                MUAwait.class, MUAsave.class, MUAload.class
         };
         for(Class classObj : builtInFunctionClasses) {
             registerBuiltInOperation(classObj, global);
@@ -160,6 +184,9 @@ public class MUACore {
     }
 
     public static List<MUAObject> evaluate(List<Token> tokenList) {
+        return evaluate(tokenList, GlobalNamespace.getInstance());
+    }
+    public static List<MUAObject> evaluate(List<Token> tokenList, Namespace baseNamespace) {
         List<MUAObject> result = new LinkedList<>();
         if(tokenList == null || tokenList.isEmpty()) {
             return result;
@@ -167,7 +194,7 @@ public class MUACore {
         Deque<Token> tokens = new LinkedList<>(tokenList);
         while (!tokens.isEmpty()) {
             try {
-                MUAObject obj = makeObject(tokens, GlobalNamespace.getInstance());
+                MUAObject obj = makeObject(tokens, baseNamespace);
                 try {
                     if(obj instanceof ExprListObject) {
                         ((ExprListObject) obj).evalExpr();

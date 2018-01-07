@@ -4,4 +4,5 @@ public interface MUAObject
 {
     boolean isAtomic();
     String typeName();
+    String toMUAExprString();
 }
