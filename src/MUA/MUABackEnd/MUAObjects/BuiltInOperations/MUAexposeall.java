@@ -1,7 +1,8 @@
 package MUABackEnd.MUAObjects.BuiltInOperations;
 
-import MUABackEnd.MUANamespace.GlobalNamespace;
+import MUABackEnd.MUAObjects.MUANamespace.GlobalNamespace;
 import MUABackEnd.MUAObjects.*;
+import MUABackEnd.StackTrace;
 
 import java.util.Map;
 

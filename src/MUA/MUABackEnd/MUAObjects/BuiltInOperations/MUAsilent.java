@@ -1,6 +1,7 @@
 package MUABackEnd.MUAObjects.BuiltInOperations;
 
 import MUABackEnd.MUAObjects.*;
+import MUABackEnd.StackTrace;
 
 public class MUAsilent extends BuiltInOperation {
     public MUAsilent() {

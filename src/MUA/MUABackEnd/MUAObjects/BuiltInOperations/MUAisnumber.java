@@ -1,8 +1,7 @@
 package MUABackEnd.MUAObjects.BuiltInOperations;
 
 import MUABackEnd.MUAObjects.*;
-import MUAMessageUtil.ErrorStringResource;
-import MUAMessageUtil.MUAErrorMessage;
+import MUABackEnd.StackTrace;
 
 public class MUAisnumber extends BuiltInOperation {
     public MUAisnumber() {

@@ -2,6 +2,7 @@ package MUABackEnd.MUAObjects.BuiltInOperations;
 
 import MUABackEnd.MUACore;
 import MUABackEnd.MUAObjects.*;
+import MUABackEnd.StackTrace;
 import MUAFrontEnd.LexicalAnalyzer;
 import MUAIO.MUAIO;
 import MUAMessageUtil.ErrorStringResource;

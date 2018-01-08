@@ -1,7 +1,7 @@
 package MUABackEnd;
 
-import MUABackEnd.MUANamespace.GlobalNamespace;
-import MUABackEnd.MUANamespace.Namespace;
+import MUABackEnd.MUAObjects.MUANamespace.GlobalNamespace;
+import MUABackEnd.MUAObjects.MUANamespace.Namespace;
 import MUABackEnd.MUAObjects.*;
 import MUABackEnd.MUAObjects.BuiltInOperations.*;
 import MUAFrontEnd.LexicalAnalyzer;

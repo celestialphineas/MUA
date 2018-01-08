@@ -1,7 +1,7 @@
 import MUABackEnd.MUACore;
 import MUABackEnd.MUAObjects.ExprListObject;
 import MUABackEnd.MUAObjects.MUAObject;
-import MUABackEnd.MUAObjects.StackTrace;
+import MUABackEnd.StackTrace;
 import MUAFrontEnd.LexicalAnalyzer;
 import MUAFrontEnd.Token;
 import MUAIO.MUAIO;

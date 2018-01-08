@@ -1,4 +1,4 @@
-package MUABackEnd.MUANamespace;
+package MUABackEnd.MUAObjects.MUANamespace;
 
 import MUABackEnd.MUAObjects.*;
 

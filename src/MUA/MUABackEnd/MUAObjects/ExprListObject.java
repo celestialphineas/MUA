@@ -1,7 +1,7 @@
 package MUABackEnd.MUAObjects;
 
-import MUABackEnd.MUANamespace.GlobalNamespace;
-import MUABackEnd.MUANamespace.Namespace;
+import MUABackEnd.MUAObjects.MUANamespace.GlobalNamespace;
+import MUABackEnd.MUAObjects.MUANamespace.Namespace;
 import MUAMessageUtil.ErrorStringResource;
 import MUAMessageUtil.MUAErrorMessage;
 

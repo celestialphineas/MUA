@@ -1,6 +1,7 @@
 package MUABackEnd.MUAObjects.BuiltInOperations;
 
 import MUABackEnd.MUAObjects.*;
+import MUABackEnd.StackTrace;
 
 public class MUAift extends BuiltInOperation {
     public MUAift() {

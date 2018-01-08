@@ -1,18 +1,13 @@
 package MUABackEnd.MUAObjects.BuiltInOperations;
 
 import MUABackEnd.MUACore;
-import MUABackEnd.MUANamespace.GlobalNamespace;
+import MUABackEnd.MUAObjects.MUANamespace.GlobalNamespace;
 import MUABackEnd.MUAObjects.*;
+import MUABackEnd.StackTrace;
 import MUAFrontEnd.LexicalAnalyzer;
-import MUAIO.MUAIO;
 import MUAMessageUtil.ErrorStringResource;
 import MUAMessageUtil.MUAErrorMessage;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.nio.file.Files;
 import java.util.Scanner;
 
 public class MUAloadmodule extends BuiltInOperation {

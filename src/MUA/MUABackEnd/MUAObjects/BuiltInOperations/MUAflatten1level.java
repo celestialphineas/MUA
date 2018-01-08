@@ -1,6 +1,7 @@
 package MUABackEnd.MUAObjects.BuiltInOperations;
 
 import MUABackEnd.MUAObjects.*;
+import MUABackEnd.StackTrace;
 
 public class MUAflatten1level extends BuiltInOperation {
     public MUAflatten1level() {

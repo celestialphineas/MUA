@@ -1,5 +1,7 @@
 package MUABackEnd.MUAObjects;
 
+import MUABackEnd.StackTrace;
+
 public abstract class BuiltInOperation extends OperationObject {
     public BuiltInOperation()       { }
     @Override public int getArgc()          { return argc; }

@@ -1,9 +1,9 @@
 package MUABackEnd.MUAObjects.BuiltInOperations;
 
 import MUABackEnd.MUAObjects.*;
+import MUABackEnd.StackTrace;
 import MUAMessageUtil.ErrorStringResource;
 import MUAMessageUtil.MUAErrorMessage;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 
 public class MUAand extends BuiltInOperation {
     public MUAand() {

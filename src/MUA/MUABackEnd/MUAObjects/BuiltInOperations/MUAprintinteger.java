@@ -1,6 +1,7 @@
 package MUABackEnd.MUAObjects.BuiltInOperations;
 
 import MUABackEnd.MUAObjects.*;
+import MUABackEnd.StackTrace;
 import MUAIO.MUAIO;
 
 public class MUAprintinteger extends BuiltInOperation {

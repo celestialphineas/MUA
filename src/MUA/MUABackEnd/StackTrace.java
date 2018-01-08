@@ -1,4 +1,6 @@
-package MUABackEnd.MUAObjects;
+package MUABackEnd;
+
+import MUABackEnd.MUAObjects.MUAStackOverflowException;
 
 import java.util.Stack;
 

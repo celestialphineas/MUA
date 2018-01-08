@@ -1,7 +1,7 @@
 package MUABackEnd.MUAObjects.BuiltInOperations;
 
-import MUABackEnd.MUANamespace.Namespace;
 import MUABackEnd.MUAObjects.*;
+import MUABackEnd.StackTrace;
 
 public class MUAlist extends BuiltInOperation {
     public MUAlist() {
