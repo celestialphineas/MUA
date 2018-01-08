@@ -37,7 +37,7 @@ public class MUAload extends BuiltInOperation {
             throw new MUARuntimeException();
         } else try {
             LexicalAnalyzer internalLexicalAnalyzer = new LexicalAnalyzer();
-            internalLexicalAnalyzer.sendLine(fileInput);
+            internalLexicalAnalyzer.sendLineStrict(fileInput);
             MUACore.evaluate(internalLexicalAnalyzer.getTokenList(), expr.namespace);
             internalLexicalAnalyzer.cleanUp();
         } catch (Exception e) {

@@ -38,7 +38,7 @@ public class MUACore {
                 .getResourceAsStream("startup.mua"), "UTF-8")
                 .useDelimiter("\\A").next();
         LexicalAnalyzer internalLexicalAnalyzer = new LexicalAnalyzer();
-        internalLexicalAnalyzer.sendLine(data);
+        internalLexicalAnalyzer.sendLineStrict(data);
         MUACore.evaluate(internalLexicalAnalyzer.getTokenList(), GlobalNamespace.getInstance());
         internalLexicalAnalyzer.cleanUp();
     }

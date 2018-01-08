@@ -26,6 +26,9 @@ make "lte [["a "b] [output (not (gt :a :b))]]
 // since in this implementation, grammar sugar for catenate strings with "+" is provided
 make "word :add
 
+// "export" is an alias of exportall
+make "export :exportall
+
 // Functional "if" implementation
 // Note that using operations with side effects may cause undefined behavior
 //make "if [["test1 "list1 "list2] [

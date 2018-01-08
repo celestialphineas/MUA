@@ -14,16 +14,27 @@ import java.util.List;
 import java.util.Scanner;
 
 public class MUAInterpreter {
+    public static boolean flagHomework = true;
     public static void main(String[] args) {
         // Flags
         boolean flagInteractiveMode = true;
-        boolean flagExpressionOut = false;
+        boolean flagExpressionOut = true;
         boolean flagLispForm = false;
         boolean flagSilent = false;
         boolean flagShowPrompt = true;
-        boolean flagPrintTokens = true;
+        boolean flagPrintTokens = false;
         boolean flagStacktrace = true;
         FileReader scriptFile = null;
+
+        if(flagHomework) {
+            flagInteractiveMode = true;
+            flagExpressionOut = true;
+            flagLispForm = false;
+            flagSilent = false;
+            flagShowPrompt = true;
+            flagPrintTokens = false;
+            flagStacktrace = true;
+        }
 
         for(int i = 0; i < args.length; i++) {
             if(args[i].equals("--help")) {
@@ -33,20 +44,20 @@ public class MUAInterpreter {
                 System.out.println("Run in interactive mode by default.");
                 System.out.println("Options:");
                 System.out.println("\t--help    : Show this help message.");
-                System.out.println("\t--out     : Output the value of the expressions.");
-                System.out.println("\t--lisp    : Output the expressions in LISP form.");
-                System.out.println("\t--silent  : Hide all warnings and errors.");
-                System.out.println("\t--noprompt: Hide prompt.");
-                System.out.println("\t--tokens  : Print tokens.");
-                System.out.println("\t--trace   : Print stack trace.");
+                System.out.println("\t--out     : Toggle output of the expressions values.");
+                System.out.println("\t--lisp    : Toggle output the expressions in Lisp form.");
+                System.out.println("\t--silent  : Toggle hiding of warnings and errors.");
+                System.out.println("\t--noprompt: Toggle prompt.");
+                System.out.println("\t--tokens  : Toggle printing tokens.");
+                System.out.println("\t--trace   : Toggle print stack trace.");
                 System.exit(0);
             }
             else if(args[i].equals("--out"))    { flagExpressionOut = !flagExpressionOut; }
-            else if(args[i].equals("--lisp"))   { flagLispForm = !flagLispForm; }
-            else if(args[i].equals("--silent")) { flagSilent = !flagSilent; }
-            else if(args[i].equals("--prompt")) { flagShowPrompt = !flagShowPrompt; }
-            else if(args[i].equals("--tokens")) { flagPrintTokens = !flagPrintTokens; }
-            else if(args[i].equals("--trace"))  { flagStacktrace = !flagStacktrace; }
+            else if(args[i].equals("--lisp"))   { flagLispForm      = !flagLispForm; }
+            else if(args[i].equals("--silent")) { flagSilent        = !flagSilent; }
+            else if(args[i].equals("--prompt")) { flagShowPrompt    = !flagShowPrompt; }
+            else if(args[i].equals("--tokens")) { flagPrintTokens   = !flagPrintTokens; }
+            else if(args[i].equals("--trace"))  { flagStacktrace    = !flagStacktrace; }
             else {
                 flagInteractiveMode = false;
                 try {
@@ -69,20 +80,35 @@ public class MUAInterpreter {
         MUACore core = MUACore.getInstance();
 
         if(flagLispForm)    ExprListObject.setLispForm();
+        else                ExprListObject.unsetLispForm();
         if(flagStacktrace)  MUACore.setShowStackTrace();
+        else                MUACore.unsetShowStackTrace();
+        if(flagHomework)    LexicalAnalyzer.unsetStrict();
+        else                LexicalAnalyzer.setStrict();
 
         if(flagInteractiveMode) while (true) {
             try {
                 if (flagShowPrompt)
                     MUAIO.getInstance().out.print(String.format("%1$-10s", "[In" + inCount + "]\t:= "));
                 inCount++;
+                StringBuilder inputBuffer = new StringBuilder();
                 while (scanner.hasNext()) {
                     String string = scanner.nextLine();
-                    lexicalAnalyzer.sendLine(string);
-                    if (lexicalAnalyzer.isCompleteLine()) {
-                        tokenList = lexicalAnalyzer.getTokenList();
-                        lexicalAnalyzer.cleanUp();
-                        break;
+                    if(flagHomework) {
+                        inputBuffer.append(string);
+                        lexicalAnalyzer.sendLine(string);
+                        if(isCompleteInput(inputBuffer.toString())) {
+                            tokenList = lexicalAnalyzer.getTokenList();
+                            lexicalAnalyzer.cleanUp();
+                            break;
+                        }
+                    } else {
+                        lexicalAnalyzer.sendLine(string);
+                        if (lexicalAnalyzer.isCompleteLine()) {
+                            tokenList = lexicalAnalyzer.getTokenList();
+                            lexicalAnalyzer.cleanUp();
+                            break;
+                        }
                     }
                 }
 
@@ -138,5 +164,17 @@ public class MUAInterpreter {
                 }
             }
         }
+    }
+
+    private static boolean isCompleteInput(String input) {
+        int parenCount = 0, bracketCount = 0;
+        for(int i = 0; i < input.length(); i++) {
+            if(input.charAt(i) == '(') parenCount++;
+            if(input.charAt(i) == ')') parenCount--;
+            if(input.charAt(i) == '[') bracketCount++;
+            if(input.charAt(i) == ']') bracketCount--;
+        }
+        if(parenCount <= 0 && bracketCount <= 0) return true;
+        return false;
     }
 }
