@@ -15,11 +15,8 @@ public class ExprListObject implements MUAObject {
     private static boolean lispForm = false;
     private static int namespaceSerial = 1;
     public Namespace namespace = GlobalNamespace.getInstance();
-    private MUAObject returnVal = null;
-    // Set only when the sublist wishes to block the parent from further
-    // evaluation.
-    private boolean evalDone = false;
     public List<MUAObject> objectList;
+    private MUAObject returnVal = null;
     public ExprListObject() {
         objectList = new LinkedList<>();
     }
@@ -31,9 +28,10 @@ public class ExprListObject implements MUAObject {
         }
         this.objectList = new LinkedList<>(that.objectList);
     }
-    public MUAObject getReturnVal() {
-        return returnVal;
-    }
+
+    public MUAObject getReturnVal() { return this.returnVal; }
+    public MUAObject setReturnVal(MUAObject that) { return this.returnVal = that; }
+
     public String getHeadName() {
         if(!objectList.isEmpty() && objectList.get(0) instanceof OperationObject)
             return ((OperationObject)(objectList.get(0))).getName();
@@ -42,10 +40,15 @@ public class ExprListObject implements MUAObject {
     public static void setLispForm()    { lispForm = true; }
     public static void unsetLispForm()  { lispForm = false; }
 
+    // Set only when the sublist wishes to block the parent from further
+    // evaluation.
+    private boolean evalDone = false;
     // Operations on the evalDone flag
     public void setEvalDone()   { evalDone = true; }
     public void unsetEvalDone() { evalDone = false; }
     public boolean isEvalDone() { return evalDone; }
+
+
     // Allocate namespace for the exprList
     public Namespace allocateNamespace(Namespace parent) {
         this.namespace = new Namespace("localNamespace" + namespaceSerial, parent);
@@ -120,7 +123,7 @@ public class ExprListObject implements MUAObject {
         if(operation == null) {
             return;
         }
-        returnVal = operation.getResult(this);
+        setReturnVal(operation.getResult(this));
     }
 
     // Implements MUAObject

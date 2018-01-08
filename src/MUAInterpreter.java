@@ -41,12 +41,12 @@ public class MUAInterpreter {
                 System.out.println("\t--trace   : Print stack trace.");
                 System.exit(0);
             }
-            else if(args[i].equals("--out"))    { flagExpressionOut = true; }
-            else if(args[i].equals("--lisp"))   { flagLispForm = true; }
-            else if(args[i].equals("--silent")) { flagSilent = true; }
-            else if(args[i].equals("--prompt")) { flagShowPrompt = false; }
-            else if(args[i].equals("--tokens")) { flagPrintTokens = true; }
-            else if(args[i].equals("--trace"))  { flagStacktrace = true; }
+            else if(args[i].equals("--out"))    { flagExpressionOut = !flagExpressionOut; }
+            else if(args[i].equals("--lisp"))   { flagLispForm = !flagLispForm; }
+            else if(args[i].equals("--silent")) { flagSilent = !flagSilent; }
+            else if(args[i].equals("--prompt")) { flagShowPrompt = !flagShowPrompt; }
+            else if(args[i].equals("--tokens")) { flagPrintTokens = !flagPrintTokens; }
+            else if(args[i].equals("--trace"))  { flagStacktrace = !flagStacktrace; }
             else {
                 flagInteractiveMode = false;
                 try {

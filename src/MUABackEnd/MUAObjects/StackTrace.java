@@ -7,7 +7,7 @@ public class StackTrace {
     public static StackTrace getInstance() {
         return ourInstance;
     }
-    private static int maxSize = 2048;
+    private static int maxSize = 1024;
     Stack<String> callStack = new Stack<>();
 
     private StackTrace() { }

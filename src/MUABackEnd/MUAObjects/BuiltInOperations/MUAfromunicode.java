@@ -24,8 +24,8 @@ public class MUAfromunicode extends BuiltInOperation {
                     ErrorStringResource.incompatible_type, obj1.typeName());
             throw new MUARuntimeException();
         }
-        result = (char)(int)((NumObject) obj1).getVal();
+        result = (char)((NumObject) obj1).getVal();
         StackTrace.getInstance().pop();
-        return new WordObject(result);
+        return new WordObject(Character.toString(result));
     }
 }

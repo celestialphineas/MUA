@@ -18,9 +18,9 @@ public class MUAlist extends BuiltInOperation {
         }
 
         // Result
-        ExprListObject result = new ExprListObject(expr);
-        result.objectList.clear();
-        result.objectList.add(expr.objectList.get(0));
+        MUAObject result = new ExprListObject(expr);
+        ((ExprListObject)result).objectList.clear();
+        ((ExprListObject)result).objectList.add(expr.objectList.get(0));
 
         // For test use
         // System.out.println(expr.namespace.getName() + " " + expr.namespace + " -> "
@@ -33,16 +33,20 @@ public class MUAlist extends BuiltInOperation {
                 MUAObject returnVal = ((ExprListObject) obj).getReturnVal();
                 // Check if this should be stopped
                 if(((ExprListObject) obj).isEvalDone()) {
-                    if(returnVal != null) return returnVal;
-                    else {
-                        StackTrace.getInstance().pop();
-                        return null;
+                    if(returnVal != null) {
+                        result = returnVal;
+                        break;
+                    } else {
+                        result = null;
+                        break;
                     }
+                } else if(returnVal == null) {
+                    continue;
+                } else {
+                    ((ExprListObject)result).objectList.add(returnVal);
                 }
-                if(returnVal == null) continue;
-                result.objectList.add(returnVal);
             } else if(obj != null) {
-                result.objectList.add(obj);
+                ((ExprListObject)result).objectList.add(obj);
             }
         }
 
