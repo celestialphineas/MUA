@@ -31,12 +31,18 @@ public class MUAif extends BuiltInOperation {
         if(((BooleanObject) obj1).getVal()) {
             if(obj2 instanceof ExprListObject) {
                 ((ExprListObject) obj2).evalExpr();
+                if(((ExprListObject) obj2).isEvalDone()) {
+                    expr.setEvalDone();
+                }
                 obj2 = ((ExprListObject) obj2).getReturnVal();
             }
             result = obj2;
         } else {
             if(obj3 instanceof ExprListObject) {
                 ((ExprListObject) obj3).evalExpr();
+                if(((ExprListObject) obj3).isEvalDone()) {
+                    expr.setEvalDone();
+                }
                 obj3 = ((ExprListObject) obj3).getReturnVal();
             }
             result = obj3;

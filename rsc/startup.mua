@@ -15,6 +15,29 @@ make "int :floor
 // "round"
 make "round [["number] [output floor(:number + 0.5)]]
 
+// This gives an integer string
+make "integerstring [["number] [
+    make "numstring (" + :number)
+    make "result "
+    make "i 1
+    repeat length :numstring [
+        print :i
+        make "ch (part :i :numstring)
+        make "numunicode unicode :ch
+        make "result if (and
+                (gt :numunicode (unicode "0) - 1)
+                (lt :numunicode (unicode "9) + 1))
+            // result when true
+            (:result + (part :i :numstring))
+            // result when false
+            stop
+        exportsymbol "result
+        make "i :i+1
+        exportsymbol "i
+    ]
+    output :result
+]]
+
 //-------- Word and list operations --------
 // "word" is an alias of add,
 // since in this implementation, grammar sugar for catenate strings with "+" is provided

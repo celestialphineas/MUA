@@ -41,7 +41,7 @@ public class MUArepeat extends BuiltInOperation {
             runExpr.namespace = ((ExprListObject) obj2).namespace;
             runExpr.evalExpr();
             result = runExpr.getReturnVal();
-            if(runExpr.isEvalDone()) break;
+            if(runExpr.isEvalDone()) { break;}
             if(expr_.objectList.size() > 2
                 && expr_.objectList.get(2) instanceof ExprListObject
                 && ((ExprListObject)expr_.objectList.get(2)).isEvalDone()) break;

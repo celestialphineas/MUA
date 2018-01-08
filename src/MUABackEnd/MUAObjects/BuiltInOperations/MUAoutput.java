@@ -10,6 +10,11 @@ public class MUAoutput extends BuiltInOperation {
     @Override
     public MUAObject getResult(ExprListObject expr)
     throws MUAStackOverflowException, MUARuntimeException {
+        // System.out.println("Output");
+        // System.out.println(expr.namespace.getName() + " " + expr.namespace + " -> "
+        //     + expr.namespace.getParent().getName() + " " + expr.namespace.getParent());
+        // System.out.println(expr);
+
         StackTrace.getInstance().push(name);
         expr.setEvalDone();
         StackTrace.getInstance().pop();

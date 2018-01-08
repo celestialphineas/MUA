@@ -11,11 +11,11 @@ public class MUAmake extends BuiltInOperation {
     }
     @Override
     // The make operation is lazy, it works in "set delay" manner
-    public MUAObject getResult(ExprListObject expr_)
+    public MUAObject getResult(ExprListObject expr)
     throws MUAStackOverflowException, MUARuntimeException {
         StackTrace.getInstance().push(name);
-        MUAObject obj1 = expr_.objectList.get(1);
-        MUAObject obj2 = expr_.objectList.get(2);
+        MUAObject obj1 = expr.objectList.get(1);
+        MUAObject obj2 = expr.objectList.get(2);
         // Eval the first slot
         if(obj1 instanceof ExprListObject) {
             ((ExprListObject) obj1).evalExpr();
@@ -40,9 +40,13 @@ public class MUAmake extends BuiltInOperation {
         }
         // Binding
         if(result != null) {
-            expr_.namespace.set(((WordObject)obj1).getVal(), result);
+            expr.namespace.set(((WordObject)obj1).getVal(), result);
+            // System.out.println("Make");
+            // System.out.println(expr.namespace.getName() + " " + expr.namespace + " -> "
+            //     + expr.namespace.getParent().getName() + " " + expr.namespace.getParent());
+            // System.out.println(expr);
         } else {
-            expr_.namespace.unset(((WordObject)obj1).getVal());
+            expr.namespace.unset(((WordObject)obj1).getVal());
         }
         StackTrace.getInstance().pop();
         return result;

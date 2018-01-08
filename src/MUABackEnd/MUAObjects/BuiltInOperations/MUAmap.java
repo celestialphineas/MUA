@@ -38,20 +38,17 @@ public class MUAmap extends BuiltInOperation {
                 operationObject = (OperationObject) obj1;
                 foundOperationObject = true;
             } else if(!CustomOperation.isOperationizable((ExprListObject) obj1)) {
-                System.out.println(1);
                 MUAErrorMessage.error(ErrorStringResource.operation_map,
                         ErrorStringResource.incompatible_type, "Cannot operationize the first argument");
                 throw new MUARuntimeException();
             }
             if(!foundOperationObject) try { operationObject = new CustomOperation((ExprListObject) obj1); }
             catch (Exception e) {
-                System.out.println(2);
                 MUAErrorMessage.error(ErrorStringResource.operation_map,
                         ErrorStringResource.incompatible_type, "Cannot operationize the first argument");
                 throw new MUARuntimeException();
             }
         } else {
-            System.out.println(3);
             MUAErrorMessage.error(ErrorStringResource.operation_map,
                     ErrorStringResource.incompatible_type, "Cannot operationize the first argument");
             throw new MUARuntimeException();

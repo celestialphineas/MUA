@@ -10,10 +10,14 @@ public class MUAthing extends BuiltInOperation {
         argc = 1;
     }
     @Override
-    public MUAObject getResult(ExprListObject expr_)
+    public MUAObject getResult(ExprListObject expr)
     throws MUAStackOverflowException, MUARuntimeException {
+        // System.out.println("Thing");
+        // System.out.println(expr.namespace.getName() + " " + expr.namespace + " -> "
+        //     + expr.namespace.getParent().getName() + " " + expr.namespace.getParent());
+        // System.out.println(expr);
+
         StackTrace.getInstance().push(name);
-        ExprListObject expr = new ExprListObject(expr_);
         // Test use:
         // System.out.println("Thing namespace: " + expr.namespace.getName());
         MUAObject obj1 = expr.objectList.get(1);
@@ -29,7 +33,7 @@ public class MUAthing extends BuiltInOperation {
                 ErrorStringResource.incompatible_type, typename);
             throw new MUARuntimeException();
         }
-        MUAObject obj = expr_.namespace.find(((WordObject)obj1).getVal());
+        MUAObject obj = expr.namespace.find(((WordObject)obj1).getVal());
         if(obj == null) {
             MUAErrorMessage.warn(ErrorStringResource.operation_thing,
                 ErrorStringResource.undefined_reference,

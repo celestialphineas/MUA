@@ -300,17 +300,17 @@ public class MUACore {
             // Add list head
             list.objectList.add(new MUAlist());
             // Allocate namespace for list
-            namespace = list.allocateNamespace(namespace);
+            Namespace newNamespace = list.allocateNamespace(namespace);
             // Test use:
             // System.out.println("List namespace: " + list.namespace.getName());
-            MUAObject toAppend = makeObject(tokens, namespace);
+            MUAObject toAppend = makeObject(tokens, newNamespace);
             while(toAppend != null) {
                 list.objectList.add(toAppend);
-                toAppend = makeObject(tokens, namespace);
+                toAppend = makeObject(tokens, newNamespace);
             }
             return list;
         } else { // RBRACKET
-            namespace = namespace.getParent();
+            // namespace = namespace.getParent();
             return null;
         }
     }

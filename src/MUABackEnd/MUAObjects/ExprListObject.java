@@ -48,15 +48,43 @@ public class ExprListObject implements MUAObject {
     public boolean isEvalDone() { return evalDone; }
     // Allocate namespace for the exprList
     public Namespace allocateNamespace(Namespace parent) {
-        namespace = new Namespace("localNamespace" + namespaceSerial, parent);
+        this.namespace = new Namespace("localNamespace" + namespaceSerial, parent);
         namespaceSerial++;
+        rebindChildrenNamespace();
+        return this.namespace;
+    }
+
+    private void rebindChildrenNamespace() {
         for(MUAObject obj : objectList) {
             if(obj instanceof ExprListObject) {
-                ((ExprListObject) obj).namespace.setParent(namespace);
+                if(((ExprListObject)obj).objectList.size() > 0) {
+                    MUAObject op = (((ExprListObject)obj).objectList.get(0));
+                    if(op != null
+                            && op instanceof BuiltInOperation
+                            && op.toString().equals("list")) {
+                        ((ExprListObject) obj).allocateNamespace(this.namespace);
+                    } else {
+                        ((ExprListObject) obj).namespace = this.namespace;
+                        ((ExprListObject) obj).rebindChildrenNamespace();
+                    }
+                } else {
+                    ((ExprListObject) obj).namespace = this.namespace;
+                    ((ExprListObject) obj).rebindChildrenNamespace();
+                }
             }
         }
-        return namespace;
     }
+
+    // This function clears recursively
+    public void clear() {
+        namespace.clear();
+        for(MUAObject obj : objectList) {
+            if(obj instanceof ExprListObject) {
+                ((ExprListObject) obj).clear();
+            }
+        }
+    }
+
     // The evalExpr() method
     public void evalExpr() throws MUAStackOverflowException, MUARuntimeException {
         // Create a copy of the objectList

@@ -56,8 +56,8 @@ public class CustomOperation extends OperationObject {
             }
             localEnvList.namespace.set(word.getVal(), obj);
             // Test use: 
-//             System.out.println("Env list namespace: " + localEnvList.namespace.getName());
-//             System.out.println("Env list namespace: " + word.getVal() + ", " + localEnvList.namespace.find(word.getVal()));
+            //System.out.println("Env list namespace: " + localEnvList.namespace.getName());
+            //System.out.println("Env list namespace: " + word.getVal() + ", " + localEnvList.namespace.find(word.getVal()));
         }
         // Get result
         localEnvList.evalExpr();
