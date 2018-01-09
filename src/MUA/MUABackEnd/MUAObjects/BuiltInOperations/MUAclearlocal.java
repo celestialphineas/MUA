@@ -22,7 +22,7 @@ public class MUAclearlocal extends BuiltInOperation {
                     expr.namespace.getMap().remove(entry.getKey());
                 }
             }
-        }
+        } else new MUAclearglobal().getResult(expr);
         return null;
     }
 }

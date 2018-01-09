@@ -63,7 +63,6 @@ public class ExprListObject implements MUAObject {
                 if(((ExprListObject)obj).objectList.size() > 0) {
                     MUAObject op = (((ExprListObject)obj).objectList.get(0));
                     if(op != null
-                            && op instanceof BuiltInOperation
                             && op.toString().equals("list")) {
                         ((ExprListObject) obj).allocateNamespace(this.namespace);
                     } else {

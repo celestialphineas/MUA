@@ -121,7 +121,7 @@ public class LexicalAnalyzer {
     private static String preprocess(String input) {
         if(input == null) return null;
         if(!strict) {
-            Pattern pattern = Pattern.compile("(\\S*?)\\s*make\\s*\"(\\S*?)\\s*\\[\\s*\\[(\\S*?)\\](\\S*)");
+            Pattern pattern = Pattern.compile("(.*?)\\s*make\\s*\"(.*?)\\s*\\[\\s*\\[(.*?)\\](.*)");
             Matcher matcher = pattern.matcher(input);
             if (matcher.find()) {
                 String[] makeArgs = matcher.group(3).split(" ");

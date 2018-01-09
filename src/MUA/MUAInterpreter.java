@@ -153,9 +153,9 @@ public class MUAInterpreter {
                     if (lexicalAnalyzer.isCompleteLine()) {
                         tokenList = lexicalAnalyzer.getTokenList();
                         lexicalAnalyzer.cleanUp();
+                        MUACore.evaluate(tokenList);
                         continue;
                     }
-                    MUACore.evaluate(tokenList);
                     StackTrace.getInstance().clear();
                 } catch (Exception e) {
                     MUAErrorMessage.error(ErrorStringResource.mua_main, ErrorStringResource.unknow_internal_error,

@@ -33,12 +33,14 @@ public class MUACore {
     }
 
     private void loadStartupScript() {
-        String data
+        String[] data
                 = new Scanner(getClass().getClassLoader()
                 .getResourceAsStream("startup.mua"), "UTF-8")
-                .useDelimiter("\\A").next();
+                .useDelimiter("\\A").next().split("\\n");
         LexicalAnalyzer internalLexicalAnalyzer = new LexicalAnalyzer();
-        internalLexicalAnalyzer.sendLineStrict(data);
+        for(String line : data) {
+            internalLexicalAnalyzer.sendLineStrict(line);
+        }
         MUACore.evaluate(internalLexicalAnalyzer.getTokenList(), GlobalNamespace.getInstance());
         internalLexicalAnalyzer.cleanUp();
     }

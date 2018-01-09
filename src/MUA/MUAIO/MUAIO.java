@@ -18,7 +18,7 @@ public class MUAIO {
             BufferedReader reader = new BufferedReader(new FileReader(filename));
             String line;
             while((line = reader.readLine()) != null) {
-                stringBuilder.append(line);
+                stringBuilder.append(line + "\n");
             }
             return stringBuilder.toString();
         } catch (FileNotFoundException e) {
