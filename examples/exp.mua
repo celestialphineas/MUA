@@ -1,0 +1,16 @@
+// Exponentiation Calculation
+// Celestial Phineas @ ZJU
+// --------
+
+make "exp [["b "n] [
+    test lt :n 1
+        ift [output 1]
+        iff [output (:b * exp :b (:n - 1))]
+]]
+
+make "i 0
+repeat 10 [
+    make "i :i + 1
+    exportsymbol "i
+    output printinteger exp 2 :i
+]

@@ -1,0 +1,7 @@
+make "tan [ [ ("x) ] [ output div sin thing ("x)   apply thing ("math.cos)  [ thing ("x)  ]    ] ]
+make "cos [ [ ("x) ] [ output sin add thing ("x)  div thing ("pi)  2.0     ] ]
+make "namelist hold [ ("tan) ("cos) ("constants) ]
+[ exportnamespace "constants
+make "e hold 2.7182818284
+make "sqrt2 hold 1.4142135623
+]

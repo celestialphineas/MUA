@@ -1,0 +1,43 @@
+// Examples of namespace
+// Celestial Phineas @ ZJU
+// --------
+// MUA namespace is something alike objects in JavaScipt
+//
+// You can bind a name to the namespace with operations
+// exportnamespace, exposenamespace
+// Or you can export or expose symbol with operations
+// exportsymbol <word>, exposesymbol <word>
+//
+// You may use the namespace in the way you use an object in JavaScipt
+// MUA also supports saving and loading operations on the disk.
+// See functions save and load below
+//
+// A namespace filled with made entries can be viewed as hashmap
+// And MUA's namespacelist provides a simple tool to convert the hashmap to
+// simple set/list of the names
+
+[
+    exportnamespace "math
+    make "cos [["x] [output sin (:x + :pi/2)]]
+    make "tan [["x] [output (sin :x)/(apply :math.cos [:x])]]
+    [
+        exportnamespace "constants
+        make "e 2.7182818284
+        make "sqrt2 1.4142135623
+        exposenamespace "mathematicalconstants
+    ]
+    make "namelist namespacelist
+    save "math.muon
+]
+
+[
+    exportnamespace "math2
+    load "math.muon
+]
+
+print math.cos(10)
+print math.tan(10)
+print :math.constants.e
+print :mathematicalconstants.sqrt2
+print math2.cos(:pi)
+print :math2.namelist

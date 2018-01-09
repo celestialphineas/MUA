@@ -1,0 +1,23 @@
+// Lazy evaluation
+// Celestial Phineas @ ZJU
+// --------
+
+declare "lazyfunc ["a "b]
+make "lazyvar hold lazyfunc 1 2
+
+print ["This "line "prints "the "held "lazy "expression]
+print :lazyvar
+
+print ["This "line "prints "the "evluated "lazy "expression]
+print eval :lazyvar
+
+print ["We "define "the "function "here]
+make "lazyfunc [["a "b] [
+    output (sqrt :a) / :b
+]]
+
+print ["And "we "again "print "the "lazy "expression]
+print :lazyvar
+
+print ["And "we "here "see "the "expression "evaluated]
+print eval :lazyvar

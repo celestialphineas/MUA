@@ -1,0 +1,23 @@
+// Example of higher order function and lambda
+// Celestial Phineas @ ZJU
+// --------
+// This code fragment calculate the circumference of a triangle. Given three
+// points and a distance function, the circumference function gives the
+// circumference of the triangle about the distance function.
+
+make "distance [["a "b] [
+    make "x1 part 1 :a
+    make "y1 part 2 :a
+    make "x2 part 1 :b
+    make "y2 part 2 :b
+    output sqrt ((:x1-:x2) * (:x1-:x2) + (:y1-:y2) * (:y1-:y2))
+]]
+
+make "circumference [["p1 "p2 "p3 "distfunc] [
+    make "l1 apply :distfunc [:p2 :p3]
+    make "l2 apply :distfunc [:p1 :p3]
+    make "l3 apply :distfunc [:p1 :p2]
+    output :l1 + :l2 + :l3
+]]
+
+print circumference [1 2] [2 3] [0 0] :distance

@@ -1,0 +1,19 @@
+// Fast factorial iteration
+// Celestial Phineas @ ZJU
+// --------
+
+make "factorial_iter [["productor "counter "n] [
+    output if (gt :counter :n)
+        [output :productor]
+        [output (factorial_iter
+                    (:productor * :counter)
+                    (:counter + 1)
+                    :n)]
+]]
+
+make "i 0
+repeat 10 [
+    make "i :i + 1
+    exportsymbol "i
+    output printinteger factorial_iter 1 1 :i
+]

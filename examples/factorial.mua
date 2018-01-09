@@ -1,0 +1,17 @@
+// Factorial
+// Celestial Phineas @ ZJU
+// --------
+
+make "factorial [["n] [
+    test (lt :n 2)
+    ift 1
+    iff [ output :n * factorial :n - 1 ]
+]]
+
+// Using make, repeat and exportsymbol, you will get something similar to "for"
+make "i 0
+repeat 10 [
+    make "i :i + 1
+    exportsymbol "i
+    output printinteger factorial :i
+]

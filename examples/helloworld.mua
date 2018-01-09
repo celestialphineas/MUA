@@ -1,0 +1,9 @@
+// Hello world with MUA
+// Celestial Phineas @ ZJU
+// --------
+//  * chspace is an operation that takes no argument but returns a word with one 
+//    single space character contained.
+//  * This MUA implementation provides sugar for catenate words, just use a 
+//    "+" to get things done. 
+
+print "Hello, + chspace + "world!

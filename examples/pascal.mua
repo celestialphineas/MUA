@@ -1,0 +1,25 @@
+// Print a Pascal Triangle
+// Celestial Phineas @ ZJU
+// --------
+
+make "nextline [["line] [
+    make "i 1
+    make "result []
+    repeat ((length :line) - 1) [
+        make "result (flatten1level
+            [ :result ((part :i :line) + (part (:i + 1) :line)) ])
+        exportsymbol "result
+        make "i :i + 1
+        exportsymbol "i
+    ]
+    make "result flatten1level [1 :result 1]
+    output :result
+]]
+
+make "current [1 1]
+print [1]
+print [1 1]
+repeat 10 [
+    print make "current nextline :current
+    exportsymbol "current
+]

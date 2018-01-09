@@ -1,0 +1,15 @@
+// Examples of functional programming
+// Celestial Phineas @ ZJU
+// --------
+// MUA provides features with high effiency to do functional programming
+// The map operation of MUA is based on the Java's stream functional features.
+// And thus better performance can be observed when doing map in MUA.
+
+map :print map :sqrt [1 2 3 4 5]
+make "lazy hold map [["x] [output :x * :y]] [1 2 3 4 5 6 7 8 9 10]
+make "y 2
+print eval :lazy
+make "y 3
+print eval :lazy
+
+print apply [["#1 "#2] [output (sqrt :#1) * (sin :#2)]] [2 3]
